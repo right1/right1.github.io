@@ -1,6 +1,7 @@
 /** Website template by freewebsitetemplates.com **/
+
 body {
-	margin :0;
+	margin:0;
 	padding :0;
 	background :url("../images/bg-body.jpg");
 	line-height :25px;
@@ -639,6 +640,7 @@ th, td {
 	color :#ebe9d7;
 }
 #footer {
+	box-shadow: 0 50vh 0 50vh #000;
 	height :130px;
 	width :100%;
 	padding :20px 0;
@@ -647,6 +649,7 @@ th, td {
 	background-repeat :repeat-x;
 	background-position :top;
 	background-color :#FF8C00;
+	
 }
 #footer div {
 	width :960px;
