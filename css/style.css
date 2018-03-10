@@ -452,7 +452,7 @@ th, td {
 }
 #body .sidebar ul.navigation li a {
 	text-decoration :none;
-	font-family :'Source Sans Pro';
+	font-family :'Source Sans Pro','Verdana';
 	font-size :32px;
 	color :#822619;
 	text-align :center;
@@ -686,7 +686,7 @@ th, td {
 }
 #footer div ul li h3 {
 	color :#ebe9d7;
-	font-family :'Source Sans Pro';
+	font-family :'Source Sans Pro','Verdana';
 	font-size :18px;
 	font-weight :normal;
 	margin :10px 0;
