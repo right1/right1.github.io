@@ -21,10 +21,11 @@ body {
     background-size: cover;
     width:100%;
     background-attachment: fixed;*/
-    background-position: center
+    
+    background-image: url("../img/bg-3.jpg");
+    background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-image: url("../img/bg-3.jpg");
     /*-webkit-background-size: 100%; 
     -moz-background-size: 100%; 
     -o-background-size: 100%; 
