@@ -12,11 +12,9 @@ header,
 	background-size: cover;
 }*/
 body, html {
-    margin: 0;
-    padding: 0;
+    height: 100%;
 }
 body{
-  background:transparent; 
 
     /* Center and scale the image nicely */
     /*background-position: center;
@@ -26,11 +24,11 @@ body{
     background-attachment: fixed;*/
 
     /*background-image: url("../img/bg-4.jpg");*/
-    /*height:100vh;
+    height:100vh;
     width:100%;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;*/
+    background-attachment: fixed;
     /*-webkit-background-size: 100%; 
     -moz-background-size: 100%; 
     -o-background-size: 100%; 
@@ -38,28 +36,8 @@ body{
     -webkit-background-size: cover; 
     -moz-background-size: cover; 
     -o-background-size: cover; */
-    /*background-size: cover;*/
+    background-size: cover;
   }
-  body:after {
-    content:"";
-    position:fixed;
-    left:0;
-    top:0;
-    right:0;
-    bottom:0;
-    z-index:-1;
-    display:block;
-    background-size:cover;
-  }
-#background img {
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    position:absolute;
-    margin-left:auto;
-    margin-right:auto;
-}
 .special-transparent {
       background-color: transparent;
       opacity: .4;
