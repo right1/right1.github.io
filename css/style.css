@@ -38,6 +38,13 @@ body{
     -o-background-size: cover; */
     background-size: cover;
   }
+#background img {
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    position:absolute;
+}
 .special-transparent {
       background-color: transparent;
       opacity: .4;
