@@ -55,7 +55,7 @@ body{
   background-color: transparent;
 }
 .cd-fixed-bg {  
-  min-height: 50vh;
+  min-height: 55vh;
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -94,24 +94,29 @@ body{
   min-height: 100%;
 }
 .cd-scrolling-bg.cd-scrolling-bg--color-1 {
+  /*GRAY*/
   background-color: #3d3536;
   color: #a6989a;
 }
 
 .cd-scrolling-bg.cd-scrolling-bg--color-2 {
+  /*PUKE GREEN*/
   background-color: #99a478;
   color: #3d3536;
 }
 
 .cd-scrolling-bg.cd-scrolling-bg--color-3 {
+  /*ORANGE*/
   background-color: #D07206;
   color: #3d3536;
 }
 .cd-scrolling-bg.cd-scrolling-bg--color-4 {
+  /*LIGHT GREEN*/
   background-color: #b4d7a8;
   color: #3d3536;
 }
 .cd-scrolling-bg.cd-scrolling-bg--color-5 {
+  /*BLACK*/
   background-color:#010101 ;
   color: #FEFEFE;
 }
@@ -135,4 +140,15 @@ body{
   background-color:#01FED4 ;
   color: #010101;
 }
+.cd-scrolling-bg.cd-scrolling-bg--color-10 {
+  /*INDIGO*/
+  background-color:#4D01FE ;
+  color: #FEFEFE;
+}
+.cd-scrolling-bg.cd-scrolling-bg--color-11 {
+  /*NEON GREEN-YELLOW*/
+  background-color:#B1EC28 ;
+  color: #010101;
+}
+
 
