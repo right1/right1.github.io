@@ -60,6 +60,8 @@ body{
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-position: center center;
+
+  -webkit-overflow-scrolling: touch;
 }
 
 .cd-fixed-bg.cd-fixed-bg--1 {
@@ -89,6 +91,9 @@ body{
 }
 .cd-fixed-bg.cd-fixed-bg--8 {
   background-image: url("../img/bg-8.jpg");
+}
+.cd-fixed-bg.cd-fixed-bg--9 {
+  background-image: url("../img/bg-9.jpg");
 }
 .cd-scrolling-bg {
   min-height: 100%;
