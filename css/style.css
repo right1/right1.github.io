@@ -55,7 +55,7 @@ body{
   background-color: transparent;
 }
 .cd-fixed-bg {  
-  min-height: 100vh;
+  min-height: 50vh;
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -80,4 +80,26 @@ body{
 
 .cd-scrolling-bg {
   min-height: 100%;
+}
+.cd-scrolling-bg.cd-scrolling-bg--color-1 {
+  background-color: #3d3536;
+  color: #a6989a;
+}
+
+.cd-scrolling-bg.cd-scrolling-bg--color-2 {
+  background-color: #99a478;
+  color: #3d3536;
+}
+
+.cd-scrolling-bg.cd-scrolling-bg--color-3 {
+  background-color: #D07206;
+  color: #3d3536;
+}
+.cd-scrolling-bg.cd-scrolling-bg--color-4 {
+  background-color: #FEFEFE;
+  color: #010101;
+}
+.cd-scrolling-bg.cd-scrolling-bg--color-5 {
+  background-color:#010101 ;
+  color: #FEFEFE;
 }
