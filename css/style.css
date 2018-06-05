@@ -54,14 +54,25 @@ body{
 
   background-color: transparent;
 }
-.cd-fixed-bg {  
-  min-height: 55vh;
-  background-size: cover;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center center;
+@media only screen and (max-width: 1125px) {
+    .cd-fixed-bg {  
+      min-height: 55vh;
+      background-size: cover;
+      background-attachment: scroll;
+      background-repeat: no-repeat;
+      background-position: center center;
 
-  -webkit-overflow-scrolling: touch;
+    }
+}
+@media only screen and (min-width: 1125px) {
+    .cd-fixed-bg {  
+      min-height: 55vh;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-position: center center;
+
+    }
 }
 
 .cd-fixed-bg.cd-fixed-bg--1 {
