@@ -64,7 +64,7 @@ body{
 
     }
 }
-@media only screen and (min-aspect-ratio: 1/1) {
+@media (min-aspect-ratio: 1/1) {
     .cd-fixed-bg {  
       min-height: 55vh;
       background-size: cover;
