@@ -2,8 +2,8 @@
   "squadName" : "Super hero squad",
   "homeTown" : "Metro City",
   "formed" : 2016,
-  "users" : 160,
-  "time: 0,
+  "users" : 30,
+  "time: 15,
   "secretBase" : "Super tower",
   "active" : true
 }
