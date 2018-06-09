@@ -1,3 +1,5 @@
 turmerican website
-updated 6/6/2018
+
+updated 6/9/2018
+
 notes:
