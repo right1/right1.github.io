@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <button>Update</button>
+  </head>
+
+  <body>
+    <canvas id="myChart" width=100vh height=50vh></canvas>
+	<script src="Chart.bundle.js".></script>
+	<script src="Chart.bundle.min.js".></script>
+	<script src="Chart.js".></script>
+	<script src="Chart.min.js".></script>
+    <script>
+	var ctx = document.getElementById("myChart");
+	var requestURL='https://forex.1forge.com/1.0.3/quotes?pairs=USDGBP,USDJPY,USDEUR,USDSGD,USDAUD,USDCAD,USDBTC,USDETH,USDLTC&api_key=MDrJU9dHUZtWMF9HuePrq0GQPULC9JWX';
+	var jpy=0;
+	var eur=0;
+	var gbp=0;
+	var sgd=0;
+	var aud=0;
+	var cad=0;
+	var btc=0;
+	var eth=0;
+	var ltc=0;
+	var counter=0;
+	var btn = document.querySelector('button');
+	btn.onclick=function(){
+		addData(requestURL);
+		setInterval(function(){addData(requestURL)}, 300000);
+		disableButton();
+	}
+	function disableButton(){
+		btn.disabled=true;
+	}
+	var scatterChart = new Chart(ctx, {
+		type: 'bar',
+	  data: {
+		labels: ['Japanese Yen','Euro','British Pound','Singapore Dollar','Australian Dollar','Canadian Dollar','btc','eth','ltc'],
+		datasets: [{
+		  label: 'Value (/USD)',
+		  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
+		  pointBackgroundColor: 'rgba('+'0'+', 0, 255, 1)',
+		  yAxisID: 'X',
+		  data: [1,1,1,1,1,1,1,1,1]
+		}]
+	  },
+	  options: {
+		scales: {
+		  yAxes: [{
+			id: 'X',
+			type: 'logarithmic',
+			position: 'left',
+		  }]
+		}
+	  }
+	});
+	
+	function addData(url){
+		var str='Updated ';
+		counter+=1;
+		str+=counter;
+		str+='x'
+		btn.textContent=str;
+		var request=new XMLHttpRequest();
+		request.open('GET',url);
+		request.responseType='json';
+		request.send();
+		request.onload=function(){
+			var testData=request.response;
+			gbp=testData[0].bid;
+			jpy=testData[1].bid;
+			eur=testData[2].bid;
+			sgd=testData[3].bid;
+			aud=testData[4].bid;
+			cad=testData[5].bid;
+			btc=testData[6].bid;
+			eth=testData[7].bid;
+			ltc=testData[8].bid;
+			//scatterChart.data.datasets[0].data.push(parseFloat(xpos));
+			//time=testData['timestamp'];
+			scatterChart.data.datasets[0].data[0]=parseFloat(jpy);
+			scatterChart.data.datasets[0].data[1]=parseFloat(eur);
+			scatterChart.data.datasets[0].data[2]=parseFloat(gbp);
+			scatterChart.data.datasets[0].data[3]=parseFloat(sgd);
+			scatterChart.data.datasets[0].data[4]=parseFloat(aud);
+			scatterChart.data.datasets[0].data[5]=parseFloat(cad);
+			scatterChart.data.datasets[0].data[6]=parseFloat(btc);
+			scatterChart.data.datasets[0].data[7]=parseFloat(eth);
+			scatterChart.data.datasets[0].data[8]=parseFloat(ltc);
+			console.log(scatterChart.data.datasets[0].data);
+			scatterChart.data.datasets[0].backgroundColor[0]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[1]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[2]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[3]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[4]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[5]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[6]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[7]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.data.datasets[0].backgroundColor[8]= 'rgba('+random(256)+', '+random(256)+', '+random(256)+', .75)';
+			scatterChart.update();
+			
+		}
+		
+	}
+	function random(num){
+		var rand=Math.floor(Math.random()* num);
+		return rand;
+	}
+
+	</script>
+  </body>
+</html>

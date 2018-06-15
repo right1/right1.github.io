@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<button>Update</button>
+<script>
+	window.onload = function () {
+	var btn = document.querySelector('button');
+	var counter=0;
+	btn.onclick=function(){
+		updateChart();
+		setInterval(function() {updateChart()}, 60000);
+		disableButton();
+	}
+	function disableButton(){
+		btn.disabled=true;
+	}
+	var chart = new CanvasJS.Chart("chartContainer", {
+		title: {
+			text: "Temperature of Each City"
+		},
+		axisY: {
+			title: "Temperature (F)",
+			suffix: " F"
+		},
+		data: [{
+			type: "column",	
+			yValueFormatString: "#,###.## F",
+			indexLabel: "{y}",
+			dataPoints: [
+				{ label: "Detroit", y: 0.0 },
+				{ label: "Singapore", y: 0.0 },
+				{ label: "New York", y: 0.0 },
+				{ label: "Chennai", y: 0.0 },
+				{ label: "Punta Arenas", y: 0.0 },
+				{ label: "Sapporo", y: 0.0}
+			]
+		}]
+	});
+
+	function updateChart() {
+		var boilerColor, deltaY, yVal;
+		var dps = chart.options.data[0].dataPoints;
+		
+		var requestDetroit='http://api.openweathermap.org/data/2.5/weather?q=Detroit&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestSingapore='http://api.openweathermap.org/data/2.5/weather?q=Singapore&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestNY='http://api.openweathermap.org/data/2.5/weather?id=5128581&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestChennai='http://api.openweathermap.org/data/2.5/weather?q=Chennai&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestHK='http://api.openweathermap.org/data/2.5/weather?id=3874787&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestCaracas='http://api.openweathermap.org/data/2.5/weather?id=2130404&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var request=new XMLHttpRequest();
+		request.open('GET',requestDetroit);
+		request.responseType='json';
+		request.send();
+		request.onload=function(){
+			var testData=request.response;
+			var temp=testData.main.temp;
+			dps[0].y=temp;
+		}
+		var request1=new XMLHttpRequest();
+		request1.open('GET',requestSingapore);
+		request1.responseType='json';
+		request1.send();
+		request1.onload=function(){
+			var testData=request1.response;
+			var temp=testData.main.temp;
+			dps[1].y=temp;
+		}
+		var request2=new XMLHttpRequest();
+		request2.open('GET',requestNY);
+		request2.responseType='json';
+		request2.send();
+		request2.onload=function(){
+			var testData=request2.response;
+			var temp=testData.main.temp;
+			dps[2].y=parseFloat(temp);
+		}
+		var request3=new XMLHttpRequest();
+		request3.open('GET',requestChennai);
+		request3.responseType='json';
+		request3.send();
+		request3.onload=function(){
+			var testData=request3.response;
+			var temp=testData.main.temp;
+			dps[3].y=parseFloat(temp);
+		}
+		var request4=new XMLHttpRequest();
+		request4.open('GET',requestHK);
+		request4.responseType='json';
+		request4.send();
+		request4.onload=function(){
+			var testData=request4.response;
+			var temp=testData.main.temp;
+			dps[4].y=parseFloat(temp);
+		}
+		var request5=new XMLHttpRequest();
+		request5.open('GET',requestCaracas);
+		request5.responseType='json';
+		request5.send();
+		request5.onload=function(){
+			var testData=request5.response;
+			var temp=testData.main.temp;
+			dps[5].y=parseFloat(temp);
+		}
+		for (var i = 0; i < dps.length; i++) {
+			deltaY = Math.round(2 + Math.random() *(-2-2));
+			yVal = deltaY + dps[i].y > 0 ? dps[i].y + deltaY : 0;
+			boilerColor = yVal > 87 ? "#FF2500" : yVal >= 60 ? "#FF6000" : yVal < 60 ? "#6B8E23 " : null;
+			if(yVal<40)boilerColor="#33ccff";
+			dps[i].color= boilerColor;
+		}
+		console.log(dps);
+		//dps[i] = {label: "Boiler "+(i+1) , y: yVal, color: boilerColor};
+		chart.options.data[0].dataPoints = dps; 
+		console.log(chart.options.data);
+		
+		counter++;
+		btn.textContent='Updated '+counter+'x';
+		chart.render();
+	};
+	
+
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>

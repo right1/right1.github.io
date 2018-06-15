@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <button>Update</button>
+  </head>
+
+  <body>
+    <canvas id="myChart" width=100vh height=50vh></canvas>
+	<script src="Chart.bundle.js".></script>
+	<script src="Chart.bundle.min.js".></script>
+	<script src="Chart.js".></script>
+	<script src="Chart.min.js".></script>
+    <script>
+	var ctx = document.getElementById("myChart");
+	var requestURL='http://api.open-notify.org/iss-now.json';
+	var xpos=0;
+	var ypos=0;
+	var time=0;
+	var counter=0;
+	var btn = document.querySelector('button');
+	btn.onclick=function(){
+		setInterval(function(){addData(requestURL)}, 5000);
+		disableButton();
+	}
+	function disableButton(){
+		btn.disabled=true;
+	}
+	var scatterChart = new Chart(ctx, {
+		type: 'line',
+	  data: {
+		labels: [],
+		datasets: [{
+		  label: 'Latitude (Left Axis)',
+		  fill:false,
+		  backgroundColor: 'rgba('+'255'+', 255, 0, 1)',
+		  pointBackgroundColor: 'rgba('+'255'+', 255, 0, 1)',
+		  yAxisID: 'X',
+		  data: []
+		}, {
+		  label: 'Longitude (Right Axis)',
+		  backgroundColor: 'rgba('+'0'+', 0, 255, 1)',
+		  yAxisID: 'Y',
+		  fill:false,
+		  data: []
+		}]
+	  },
+	  options: {
+		scales: {
+		  yAxes: [{
+			id: 'X',
+			type: 'linear',
+			position: 'left',
+			ticks: {
+			  max: 100,
+			  min: 0
+			},
+		  }, {
+			id: 'Y',
+			type: 'linear',
+			position: 'right',
+			ticks: {
+			  max: 100,
+			  min: 0
+			}
+		  }]
+		}
+	  }
+	});
+	
+	function addData(url){
+		var str='Updated ';
+		counter+=1;
+		str+=counter;
+		str+='x'
+		btn.textContent=str;
+		var request=new XMLHttpRequest();
+		request.open('GET',url);
+		request.responseType='json';
+		request.send();
+		request.onload=function(){
+			var testData=request.response;
+			xpos=testData['iss_position']['latitude'];
+			ypos=testData['iss_position']['longitude'];
+			time=testData['timestamp'];
+			
+			scatterChart.data.datasets[0].data.push(parseFloat(xpos));
+			scatterChart.data.datasets[1].data.push(parseFloat(ypos));
+			
+			console.log(ypos);
+			scatterChart.data.labels.push(time);
+			
+			if(counter%50==1){
+				scatterChart.options.scales.yAxes[0].ticks.max=Math.max.apply(null,scatterChart.data.datasets[0].data)+10;
+				scatterChart.options.scales.yAxes[0].ticks.min=Math.min.apply(null,scatterChart.data.datasets[0].data)-20;
+				scatterChart.options.scales.yAxes[1].ticks.max=Math.max.apply(null,scatterChart.data.datasets[1].data)+20;
+				scatterChart.options.scales.yAxes[1].ticks.min=Math.min.apply(null,scatterChart.data.datasets[1].data)-10;
+			}
+			if(parseFloat(xpos)>scatterChart.options.scales.yAxes[0].ticks.max){
+				scatterChart.options.scales.yAxes[0].ticks.max=parseFloat(xpos)+1;
+			}else if(parseFloat(xpos)<scatterChart.options.scales.yAxes[0].ticks.min){
+				scatterChart.options.scales.yAxes[0].ticks.min=parseFloat(xpos)-1;
+			}
+			if(parseFloat(ypos)>scatterChart.options.scales.yAxes[1].ticks.max){
+				scatterChart.options.scales.yAxes[1].ticks.max=parseFloat(ypos)+1;
+			}else if(parseFloat(ypos)<scatterChart.options.scales.yAxes[1].ticks.min){
+				scatterChart.options.scales.yAxes[1].ticks.min=parseFloat(ypos)-1;
+			}
+			if(scatterChart.data.datasets[0].data.length>250){
+				scatterChart.data.datasets[0].data.shift();
+				scatterChart.data.datasets[1].data.shift();
+				
+				scatterChart.data.labels.shift();
+				
+			}
+			scatterChart.update();
+			
+		}
+		
+	}
+	function random(num){
+		var rand=Math.floor(Math.random()* num);
+		return rand;
+	}
+
+	</script>
+  </body>
+</html>

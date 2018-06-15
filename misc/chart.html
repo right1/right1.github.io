@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <button>Update</button>
+  </head>
+
+  <body>
+    <canvas id="myChart" width=100vh height=50vh></canvas>
+	<script src="Chart.bundle.js".></script>
+	<script src="Chart.bundle.min.js".></script>
+	<script src="Chart.js".></script>
+	<script src="Chart.min.js".></script>
+    <script>
+	var ctx = document.getElementById("myChart");
+	var requestURL='https://right1.github.io/-right1.github.io/misc/testdata.json';
+	var users=0;
+	var time=0;
+	var counter=0;
+	var btn = document.querySelector('button');
+	btn.onclick=function(){
+		addData(requestURL);
+	}
+	var scatterChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			datasets: [{
+				label: 'Users',
+				pointRadius: 5,
+				pointHitRadius: 10,
+				pointHoverRadius: 10,
+				backgroundColor: 'rgba('+'255'+', 111, 111, 1)',
+				data: [{
+					x: -0,
+					y: 3
+				}, {
+					x: 5,
+					y: 10
+				}, {
+					x: 10,
+					y: 19
+				}]
+			}]
+		},
+		options: {
+			scales: {
+				xAxes: [{
+					type: 'linear',
+					position: 'bottom'
+				}]
+			}
+		}
+	});
+	
+	function addData(url){
+		var str='Updated ';
+		counter+=1;
+		str+=counter;
+		str+='x'
+		btn.textContent=str;
+		var request=new XMLHttpRequest();
+		request.open('GET',url);
+		request.responseType='json';
+		request.send();
+		request.onload=function(){
+			var testData=request.response;
+			users=testData['users'];
+			time=testData['time'];
+			users+=random(21);
+			users-=10;
+			var xVal=scatterChart.data.datasets[0].data[scatterChart.data.datasets[0].data.length-1].x;
+			xVal+=1;
+			scatterChart.data.datasets[0].data.push({x: xVal, y: users});
+			if(scatterChart.data.datasets[0].data.length>10){
+				scatterChart.data.datasets[0].data.shift();
+			}
+			scatterChart.data.datasets[0].backgroundColor= 'rgba('+random(256)+', '+'0'+', '+'0'+', .5)';
+			scatterChart.data.datasets[0].pointBackgroundColor= 'rgba('+'0'+', '+'0'+', '+'255'+', 1';
+			scatterChart.update();
+		}
+	}
+	function random(num){
+		var rand=Math.floor(Math.random()* num);
+		return rand;
+	}
+	</script>
+  </body>
+</html>
