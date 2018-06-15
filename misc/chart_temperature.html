@@ -41,12 +41,12 @@
 		var boilerColor, deltaY, yVal;
 		var dps = chart.options.data[0].dataPoints;
 		
-		var requestDetroit='http://api.openweathermap.org/data/2.5/weather?q=Detroit&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
-		var requestSingapore='http://api.openweathermap.org/data/2.5/weather?q=Singapore&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
-		var requestNY='http://api.openweathermap.org/data/2.5/weather?id=5128581&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
-		var requestChennai='http://api.openweathermap.org/data/2.5/weather?q=Chennai&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
-		var requestHK='http://api.openweathermap.org/data/2.5/weather?id=3874787&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
-		var requestCaracas='http://api.openweathermap.org/data/2.5/weather?id=2130404&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestDetroit='https://api.openweathermap.org/data/2.5/weather?q=Detroit&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestSingapore='https://api.openweathermap.org/data/2.5/weather?q=Singapore&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestNY='https://api.openweathermap.org/data/2.5/weather?id=5128581&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestChennai='https://api.openweathermap.org/data/2.5/weather?q=Chennai&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestHK='https://api.openweathermap.org/data/2.5/weather?id=3874787&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
+		var requestCaracas='https://api.openweathermap.org/data/2.5/weather?id=2130404&APPID=5ec4eb48838f4d99e82514ab1bc5c613&units=imperial';
 		var request=new XMLHttpRequest();
 		request.open('GET',requestDetroit);
 		request.responseType='json';
