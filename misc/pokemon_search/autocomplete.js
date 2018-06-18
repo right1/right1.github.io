@@ -947,6 +947,7 @@ btn.onclick = function () {
     pokemon_index++;
     if (pokemon_index != -1) {
         this.innerHTML='Loading...';
+        this.disabled=true;
         var requestURL = 'https://pokeapi.co/api/v2/pokemon/';
         requestURL += pokemon_index;
         var request = new XMLHttpRequest();
@@ -959,6 +960,7 @@ btn.onclick = function () {
         document.getElementById('pImage').src=imgURL;
         request.onload = function () {
             btn.innerHTML='Submit';
+            btn.disabled=false;
             var pokemonData = request.response;
             var pName = document.getElementById('pName');
             var pAbility = document.getElementById('pAbility');
@@ -985,7 +987,6 @@ btn.onclick = function () {
             types=types.replace(/-/g,' ');
             pType.innerHTML = types;
             var stats = [];
-
             stats.push(pokemonData.stats[5].base_stat);
             stats.push(pokemonData.stats[4].base_stat);
             stats.push(pokemonData.stats[3].base_stat);
