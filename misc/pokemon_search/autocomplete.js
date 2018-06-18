@@ -978,6 +978,7 @@ btn.onclick = function () {
             stats.push(pokemonData.stats[0].base_stat);
             pWeight.innerHTML = 'Weight: ' + (0.1 * pokemonData.weight) + 'kg';
             statChart.data.datasets[0].data=stats;
+            statChart.update();
         }
     }
 }
