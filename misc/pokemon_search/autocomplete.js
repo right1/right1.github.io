@@ -969,6 +969,7 @@ btn.onclick = function () {
                     abilities += ', ';
                 }
             }
+            abilities=abilities.replace('-',' ');
             pAbility.innerHTML = abilities;
             var types = 'Type(s): ';
             for (var i = 0; i < pokemonData.types.length; i++) {
@@ -977,6 +978,7 @@ btn.onclick = function () {
                     types += ', ';
                 }
             }
+            types=types.replace('-',' ');
             pType.innerHTML = types;
             var stats = [];
 
