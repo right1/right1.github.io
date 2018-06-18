@@ -906,7 +906,7 @@ var ctx = document.getElementById("statsChart");
 var statChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Hp', 'Attack', 'Defense', 'Special Attack', 'Special Defense', 'Speed',],
+        labels: ['Hp', 'Atk', 'Def', 'SpAtk', 'SpDef', 'Speed',],
         datasets: [{
             label: 'Base Stat Value',
             backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#3e95cd"],
@@ -925,6 +925,11 @@ var statChart = new Chart(ctx, {
                 ticks: {
                     suggestedMax: 160,
                     min: 0
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    autoSkip:false
                 }
             }]
         }
