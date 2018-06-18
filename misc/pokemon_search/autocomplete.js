@@ -125,10 +125,10 @@ var pokemon = [
     "Raichu",
     "Sandshrew",
     "Sandslash",
-    "Nidoran♀",
+    "Nidoran-f",
     "Nidorina",
     "Nidoqueen",
-    "Nidoran♂",
+    "Nidoran-m",
     "Nidorino",
     "Nidoking",
     "Clefairy",
@@ -903,7 +903,6 @@ var pokemon = [
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
 autocomplete(document.getElementById("myInput"), pokemon);
 var ctx = document.getElementById("statsChart");
-console.log(1);
 var statChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -917,16 +916,20 @@ var statChart = new Chart(ctx, {
         }]
     },
     options: {
+        responsive:false,
         scales: {
             yAxes: [{
                 id: 'X',
-                type: 'linear',//Y axis log scale so that bars look more even
+                type: 'linear',
                 position: 'left',
+                ticks: {
+                    suggestedMax: 160,
+                    min: 0
+                }
             }]
         }
     }
 });
-console.log(2);
 var btn = document.getElementById('submit');
 btn.onclick = function () {
     var input = document.getElementById('myInput').value;
@@ -938,6 +941,7 @@ btn.onclick = function () {
     }
     pokemon_index++;
     if (pokemon_index != -1) {
+        this.innerHTML='Loading...';
         var requestURL = 'https://pokeapi.co/api/v2/pokemon/';
         requestURL += pokemon_index;
         var request = new XMLHttpRequest();
@@ -945,6 +949,7 @@ btn.onclick = function () {
         request.responseType = 'json';
         request.send();
         request.onload = function () {
+            btn.innerHTML='Submit';
             var pokemonData = request.response;
             var pName = document.getElementById('pName');
             var pAbility = document.getElementById('pAbility');
@@ -976,9 +981,10 @@ btn.onclick = function () {
             stats.push(pokemonData.stats[2].base_stat);
             stats.push(pokemonData.stats[1].base_stat);
             stats.push(pokemonData.stats[0].base_stat);
-            pWeight.innerHTML = 'Weight: ' + (0.1 * pokemonData.weight) + 'kg';
+            pWeight.innerHTML = 'Weight: ' + pokemonData.weight.toString().substr(0,pokemonData.weight.toString().length-1)+'.'+ pokemonData.weight.toString()[pokemonData.weight.toString().length-1]+ 'kg';
             statChart.data.datasets[0].data=stats;
             statChart.update();
+            
         }
     }
 }
