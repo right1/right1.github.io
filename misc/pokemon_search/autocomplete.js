@@ -986,6 +986,31 @@ btn.onclick = function () {
             stats.push(pokemonData.stats[2].base_stat);
             stats.push(pokemonData.stats[1].base_stat);
             stats.push(pokemonData.stats[0].base_stat);
+            for(var i=0;i<6;i++){
+                var r=350;
+                var g=-60;
+                var b=0;
+                var st=Math.floor(stats[i]*2.7);
+                while(st>0){
+                    if(g<255){
+                        g++;
+                        r--;
+                    }else if(b<255){
+                        b+=2;
+                    }
+                    st--;
+                }
+                // while(g>255){
+                //     g--;
+                //     b++;
+                // }
+                // while(st<80){
+                //     b-=4;
+                //     r+=4;
+                //     st++;
+                // }
+                statChart.data.datasets[0].backgroundColor[i]='rgba(' + r + ', '+g+', '+b+', 1)';
+            }
             pWeight.innerHTML = 'Weight: ' + pokemonData.weight.toString().substr(0,pokemonData.weight.toString().length-1)+'.'+ pokemonData.weight.toString()[pokemonData.weight.toString().length-1]+ 'kg';
             statChart.data.datasets[0].data=stats;
             statChart.update();
