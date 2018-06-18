@@ -953,6 +953,10 @@ btn.onclick = function () {
         request.open('GET', requestURL);
         request.responseType = 'json';
         request.send();
+        var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+        imgURL+=pokemon_index;
+        imgURL+='.png';
+        document.getElementById('pImage').src=imgURL;
         request.onload = function () {
             btn.innerHTML='Submit';
             var pokemonData = request.response;
