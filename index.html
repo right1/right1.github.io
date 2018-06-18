@@ -1,61 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Homepage</title>
-    <!-- Font Awesome -->
-    <!-- <style>
-    	body{
-    		background-image: url("img/bg-2.png");
-    		background-repeat: no-repeat;
-    		background-attachment: fixed;
-    	}
-    	
-    	
-    </style> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px Arial;
+        }
+
+        .autocomplete {
+            /*the container must be positioned relative:*/
+            position: relative;
+            display: inline-block;
+        }
+
+        input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        input[type=text] {
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+        input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        .autocomplete-items div:hover {
+            /*when hovering an item:*/
+            background-color: #e9e9e9;
+        }
+
+        .autocomplete-active {
+            /*when navigating through the items using the arrow keys:*/
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Main Navigation -->
-    
-	<!-- Main Navigation -->
-	<!-- Main layout -->
-	<main>
-		<!-- Main Container -->
-		<a href="new/index.html"><h1>new website</h1></a>
-		<a href="old/index.html"><h1>old website</h1></a>
-		<a href="misc/pokemon_search/index.html"><h1>Pokemon Search</h1></a>
-		<a href="misc/chart_currency.html"><h1>Live currency data</h1></a>
-		<a href="misc/chart_iss.html"><h1>Live ISS coordinates</h1></a>
-		<a href="misc/chart_mydata.html"><h1>Updating chart (updates from json test data)</h1></a>
-		<a href="misc/jokes.html"><h1>Very funny jokes</h1></a>
-		<a href="misc/chart_temperature.html"><h1>Live city temperature data (takes some time to update)</h1></a>
-		<a href="misc/testdata.json"><h1>JSON test data</h1></a>
-		<br></br>
-		<p>Notes:</p>
-		
-		<!-- Main Container -->
-		
-	</main>
-	<!-- Main layout -->
-	
-	
-	
-	<!-- Footer -->
-	
-	<!-- Footer -->
-	
-	<!-- Footer -->
-                      
-	
-	
-	<!-- Footer -->
-                
-    <!-- SCRIPTS -->
+    <h2>Sophisticated Pokemon Search</h2>
+
+    <!--Make sure the form has the autocomplete function switched off:-->
+    <form autocomplete="off" action="/action_page.php">
+
+    </form>
+    <div class="autocomplete" style="width:300px;">
+        <input id="myInput" type="text" name="myPokemon" placeholder="Pokemon">
+    </div>
+    <button id="submit">Submit</button>
+    <br></br>
+    <p id='pName'>Pokemon Name</p>
+    <p id='pType'>Pokemon Type(s)</p>
+    <p id='pAbility'>Pokemon Abilities</p>
+    <p id='pWeight'>Pokemon Weight</p>
+    <canvas id="statsChart" style="width:100vw;height:70vh"></canvas>
+    <script src="Chart.bundle.js" .></script>
+	<script src="Chart.bundle.min.js" .></script>
+	<script src="Chart.js" .></script>
+	<script src="Chart.min.js" .></script>
+    <script src="autocomplete.js"></script>
 </body>
 
 </html>
