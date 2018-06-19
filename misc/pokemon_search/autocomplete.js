@@ -482,7 +482,10 @@ var pokemon = [
     "Groudon",
     "Rayquaza",
     "Jirachi",
-    "Deoxys",
+    "Deoxys-Normal",
+    "Deoxys-Attack",
+    "Deoxys-Defense",
+    "Deoxys-Speed",
     "Turtwig",
     "Grotle",
     "Torterra",
@@ -583,7 +586,7 @@ var pokemon = [
     "Palkia",
     "Heatran",
     "Regigigas",
-    "Giratina",
+    "Giratina-Altered",
     "Cresselia",
     "Phione",
     "Manaphy",
@@ -651,7 +654,8 @@ var pokemon = [
     "Krokorok",
     "Krookodile",
     "Darumaka",
-    "Darmanitan",
+    "Darmanitan-Standard",
+    "Darmanitan-Zen",
     "Maractus",
     "Dwebble",
     "Crustle",
@@ -774,10 +778,10 @@ var pokemon = [
     "Pangoro",
     "Furfrou",
     "Espurr",
-    "Meowstic",
     "Honedge",
     "Doublade",
-    "Aegislash",
+    "Aegislash-Blade",
+    "Aegislash-Shield",
     "Spritzee",
     "Aromatisse",
     "Swirlix",
@@ -842,7 +846,8 @@ var pokemon = [
     "Ribombee",
     "Rockruff",
     "Lycanroc",
-    "Wishiwashi",
+    "Wishiwashi-Solo",
+    "Wishiwashi-School",
     "Mareanie",
     "Toxapex",
     "Mudbray",
@@ -898,7 +903,107 @@ var pokemon = [
     "Guzzlord",
     "Necrozma",
     "Magearna",
-    "Marshadow"
+    "Marshadow",
+    "Abomasnow-Mega",
+    "Absol-Mega",
+    "Aerodactyl-Mega",
+    "Aggron-Mega",
+    "Alakazam-Mega",
+    "Altaria-Mega",
+    "Ampharos-Mega",
+    "Audino-Mega",
+    "Banette-Mega",
+    "Beedrill-Mega",
+    "Blastoise-Mega",
+    "Blaziken-Mega",
+    "Camerupt-Mega",
+    "Charizard-Mega-X",
+    "Charizard-Mega-Y",
+    "Diancie-Mega",
+    "Diglett-Alola",
+    "Dugtrio-Alola",
+    "Exeggutor-Alola",
+    "Floette-Eternal",
+    "Gallade-Mega",
+    "Garchomp-Mega",
+    "Gardevoir-Mega",
+    "Gengar-Mega",
+    "Geodude-Alola",
+    "Giratina-Origin",
+    "Glalie-Mega",
+    "Golem-Alola",
+    "Gourgeist-Large",
+    "Gourgeist-Small",
+    "Gourgeist-Super",
+    "Graveler-Alola",
+    "Greninja-Ash",
+    "Grimer-Alola",
+    "Groudon-Primal",
+    "Gyarados-Mega",
+    "Heracross-Mega",
+    "Hoopa-Unbound",
+    "Houndoom-Mega",
+    "Kangaskhan-Mega",
+    "Kyogre-Primal",
+    "Kyurem-Black",
+    "Kyurem-White",
+    "Landorus-Therian",
+    "Latias-Mega",
+    "Latios-Mega",
+    "Lopunny-Mega",
+    "Lucario-Mega",
+    "Lycanroc-Midnight",
+    "Manectric-Mega",
+    "Marowak-Alola",
+    "Mawile-Mega",
+    "Medicham-Mega",
+    "Meloetta-Pirouette",
+    "Meowstic-Female",
+    "Meowstic-Male",
+    "Meowth-Alola",
+    "Metagross-Mega",
+    "Mewtwo-Mega-X",
+    "Mewtwo-Mega-Y",
+    "Muk-Alola",
+    "Ninetales-Alola",
+    "Oricorio-Pau",
+    "Oricorio-Pom-Pom",
+    "Oricorio-Sensu",
+    "Persian-Alola",
+    "Pidgeot-Mega",
+    "Pinsir-Mega",
+    "Pumpkaboo-Large",
+    "Pumpkaboo-Small",
+    "Pumpkaboo-Super",
+    "Raichu-Alola",
+    "Raticate-Alola",
+    "Rattata-Alola",
+    "Rayquaza-Mega",
+    "Rotom-Fan",
+    "Rotom-Frost",
+    "Rotom-Heat",
+    "Rotom-Mow",
+    "Rotom-Wash",
+    "Sableye-Mega",
+    "Salamence-Mega",
+    "Sandshrew-Alola",
+    "Sandslash-Alola",
+    "Sceptile-Mega",
+    "Scizor-Mega",
+    "Sharpedo-Mega",
+    "Shaymin-Sky",
+    "Slowbro-Mega",
+    "Steelix-Mega",
+    "Swampert-Mega",
+    "Thundurus-Therian",
+    "Tornadus-Therian",
+    "Tyranitar-Mega",
+    "Venusaur-Mega",
+    "Vulpix-Alola",
+    "Wormadam-Sandy",
+    "Wormadam-Trash",
+    "Zygarde-10",
+    "Zygarde-Complete"
 ];
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
 autocomplete(document.getElementById("myInput"), pokemon);
@@ -949,14 +1054,29 @@ btn.onclick = function () {
         this.innerHTML='Loading...';
         this.disabled=true;
         var requestURL = 'https://pokeapi.co/api/v2/pokemon/';
-        requestURL += pokemon_index;
+        requestURL += input.toLowerCase();
+        if(input.toLowerCase()=='landorus' || input.toLowerCase()=='thundurus' || input.toLowerCase()=='tornadus'){
+            requestURL+='-incarnate';
+        }
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
         request.responseType = 'json';
         request.send();
-        var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-        imgURL+=pokemon_index;
-        imgURL+='.png';
+        var imgURL='https://img.pokemondb.net/artwork/';
+        //var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+        if(input.toLowerCase()=='minior'){
+            imgURL+='774';
+        }else{
+            imgURL+=input.toLowerCase();
+        }
+        if(imgURL.indexOf('alola')!=-1){
+            imgURL+='n';
+        }
+        imgURL+='.jpg';
+        if(input.toLowerCase()=="floette-eternal"){
+            imgURL="https://pre00.deviantart.net/0b60/th/pre/i/2015/263/9/a/eternal_flower_floette_by_alphaxxi-d9aaupf.png";
+            //imgURL="https://t00.deviantart.net/iIkqT4aQNr0Hh9BII1eSn-gv2zQ=/fit-in/700x350/filters:fixed_height(100,100):origin()/pre00/765a/th/pre/i/2014/037/b/d/a_z__s_floette_by_alounea-d75djpb.png";
+        }
         document.getElementById('pImage').src=imgURL;
         request.onload = function () {
             btn.innerHTML='Submit';

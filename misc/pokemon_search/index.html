@@ -65,6 +65,19 @@
             background-color: DodgerBlue !important;
             color: #ffffff;
         }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media only screen and (orientation:landscape){
+            .columns{
+                -webkit-column-count: 3; /* Chrome, Safari, Opera */
+                -moz-column-count: 3; /* Firefox */
+                column-count: 2;
+            }
+        }
+        
     </style>
 </head>
 
@@ -82,13 +95,14 @@
     <button id="submit">Submit</button>
     
     <br></br>
-    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/255.png" id='pImage'></img>
-    <p id='pName'>Pokemon Name</p>
-    <p id='pType'>Pokemon Type(s)</p>
-    <p id='pAbility'>Pokemon Abilities</p>
-    <p id='pWeight'>Pokemon Weight</p>
+    <div class="columns"><img  src="https://img.pokemondb.net/artwork/torchic.jpg" id='pImage' height=350px class="center"></img>
+        <p id='pName' width="50%">Pokemon Name</p>
+        <p id='pType'>Pokemon Type(s)</p>
+        <p id='pAbility'>Pokemon Abilities</p>
+        <p id='pWeight'>Pokemon Weight</p></div>
     
-    <canvas id="statsChart" style="width:100vw;height:70vh"></canvas>
+    
+    <canvas id="statsChart" style="width:100vw;height:50vh"></canvas>
     <script src="Chart.bundle.js" .></script>
 	<script src="Chart.bundle.min.js" .></script>
 	<script src="Chart.js" .></script>

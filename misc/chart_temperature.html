@@ -102,8 +102,7 @@
 			dps[5].y=parseFloat(temp);
 		}
 		for (var i = 0; i < dps.length; i++) {
-			deltaY = Math.round(2 + Math.random() *(-2-2));
-			yVal = deltaY + dps[i].y > 0 ? dps[i].y + deltaY : 0;
+			yVal = dps[i].y;
 			boilerColor = yVal > 87 ? "#FF2500" : yVal >= 60 ? "#FF6000" : yVal < 60 ? "#6B8E23 " : null;
 			if(yVal<40)boilerColor="#33ccff";
 			dps[i].color= boilerColor;
