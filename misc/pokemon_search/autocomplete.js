@@ -1057,6 +1057,8 @@ btn.onclick = function () {
         requestURL += input.toLowerCase();
         if(input.toLowerCase()=='landorus' || input.toLowerCase()=='thundurus' || input.toLowerCase()=='tornadus'){
             requestURL+='-incarnate';
+        }else if(input.toLowerCase()=='mimikyu'){
+            requestURL+='-disguised';
         }
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
