@@ -65,19 +65,36 @@
             background-color: DodgerBlue !important;
             color: #ffffff;
         }
-        .center {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        @media only screen and (orientation:landscape){
-            .columns{
-                -webkit-column-count: 3; /* Chrome, Safari, Opera */
-                -moz-column-count: 3; /* Firefox */
+
+
+
+        @media screen and (orientation:landscape) {
+            .columns {
+                -webkit-column-count: 3;
+                /* Chrome, Safari, Opera */
+                -moz-column-count: 3;
+                /* Firefox */
                 column-count: 2;
             }
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                height:350px;
+            }
         }
-        
+
+        @media screen and (orientation:portrait) {
+            .columns {
+                column-count: 1;
+            }
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width:80vw;
+            }
+        }
     </style>
 </head>
 
@@ -93,20 +110,22 @@
         <input id="myInput" type="text" name="myPokemon" placeholder="Pokemon">
     </div>
     <button id="submit">Submit</button>
-    
+
     <br></br>
-    <div class="columns"><img  src="https://img.pokemondb.net/artwork/torchic.jpg" id='pImage' height=350px class="center"></img>
+    <div class="columns">
+        <img src="https://img.pokemondb.net/artwork/torchic.jpg" id='pImage' class="center"></img>
         <p id='pName' width="50%">Pokemon Name</p>
         <p id='pType'>Pokemon Type(s)</p>
         <p id='pAbility'>Pokemon Abilities</p>
-        <p id='pWeight'>Pokemon Weight</p></div>
-    
-    
+        <p id='pWeight'>Pokemon Weight</p>
+    </div>
+
+
     <canvas id="statsChart" style="width:100vw;height:50vh"></canvas>
     <script src="Chart.bundle.js" .></script>
-	<script src="Chart.bundle.min.js" .></script>
-	<script src="Chart.js" .></script>
-	<script src="Chart.min.js" .></script>
+    <script src="Chart.bundle.min.js" .></script>
+    <script src="Chart.js" .></script>
+    <script src="Chart.min.js" .></script>
     <script src="autocomplete.js"></script>
 </body>
 
