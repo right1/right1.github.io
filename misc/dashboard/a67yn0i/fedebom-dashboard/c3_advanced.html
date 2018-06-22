@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dashboard template</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	<link href="assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/core.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/components.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/colors.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/extras/animate.min.css" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script type="text/javascript" src="assets/js/plugins/loaders/pace.min.js"></script>
+	<script type="text/javascript" src="assets/js/core/libraries/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/js/core/libraries/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="assets/js/plugins/forms/styling/switchery.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/visualization/d3/d3.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/visualization/c3/c3.min.js"></script>
+
+	<script type="text/javascript" src="assets/js/core/app.js"></script>
+	<script type="text/javascript" src="assets/js/charts/c3/c3_advanced.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/ui/ripple.min.js"></script>
+
+	<!-- /theme JS files -->
+
+</head>
+
+<body>
+
+	<!-- Main navbar -->
+	<div class="navbar navbar-default header-highlight">
+		<div class="navbar-header">
+
+			<a href="https://www.at.ford.com/en/homepage.html">
+				<img src="assets/images/ford.png" height="50vh" alt="">
+			</a>
+
+			<!-- <ul class="nav navbar-nav visible-xs-block">
+				<li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+				<li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+			</ul> -->
+		</div>
+
+
+
+		<div class="navbar-right">
+			<!-- <p class="navbar-text"></p> -->
+			<p class="navbar-text" id="serverson">
+				<span class="label bg-success">Servers Online</span>
+			</p>
+			<p class="navbar-text" id="serversoff">
+				<span class="label bg-danger">Servers Offline</span>
+			</p>
+		</div>
+	</div>
+	</div>
+	<!-- /main navbar -->
+
+
+	<!-- Page container -->
+	<div class="page-container">
+
+		<!-- Page content -->
+		<div class="page-content">
+
+			<!-- Main sidebar -->
+
+
+
+			<!-- Main content -->
+			<div class="content-wrapper">
+				<!-- Page header -->
+				<div class="page-header">
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4>
+								<a href="https://www.at.ford.com/en/homepage.html">
+									<i class="icon-arrow-left52 position-left"></i>
+								</a>
+								<span class="text-semibold">Ford/</span>Dashboard-template</h4>
+						</div>
+						<label class="checkbox-inline checkbox-switchery checkbox-right switchery-s">
+							<input type="checkbox" id="livetoggle" class="switch" checked="checked"> Live:
+						</label>
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ><i class="icon-cog5 position-left"></i><span id="update-button"> Update interval: 5s </span><span class="caret"></span></button>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li class="disabled"><a href="#"><i class="glyphicon glyphicon-flash"></i>0.5</a></li>
+								<li id="update-5"><a href="#"><i class="icon-rocket"></i>5</a></li>
+								<li id="update-10"><a href="#"><i class="icon-truck"></i>10</a></li>
+								<li id="update-30"><a href="#"><i class="icon-bike"></i>30</a></li>
+								<li id="update-60"><a href="#"><i class="icon-footprint"></i>60</a></li>
+							</ul>
+						</div>
+
+						<div class="heading-elements">
+
+							<div class="heading-btn-group">
+
+								<a href="#" id='resetserver' class="btn btn-link btn-float text-size-small has-text">
+									<i class="icon-server text-primary"></i>
+									<span id="serverbuttontext">Servers Offline?</span>
+								</a>
+								<a href="https://right1.github.io/-right1.github.io/misc/limitlessdata.json" class="btn btn-link btn-float text-size-small has-text">
+									<i class="icon-bars-alt text-primary"></i>
+									<span>Raw Data</span>
+								</a>
+								<a href="#" class="btn btn-link btn-float text-size-small has-text">
+									<i class="icon-calculator text-primary"></i>
+									<span>Invoices</span>
+								</a>
+								<a href="#" class="btn btn-link btn-float text-size-small has-text">
+									<i class="icon-calendar5 text-primary"></i>
+									<span>Schedule</span>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- <div class="breadcrumb-line breadcrumb-line-component">
+						<ul class="breadcrumb">
+							<li><a href="index.html"><i class="icon-home2 position-left"></i> Home</a></li>
+							<li><a href="c3_advanced.html">C3</a></li>
+							<li class="active">Advanced examples</li>
+						</ul>
+
+						<ul class="breadcrumb-elements">
+							<li><a href="#"><i class="icon-comment-discussion position-left"></i> Support</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									<i class="icon-gear position-left"></i>
+									Settings
+									<span class="caret"></span>
+								</a>
+
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a href="#"><i class="icon-user-lock"></i> Account security</a></li>
+									<li><a href="#"><i class="icon-statistics"></i> Analytics</a></li>
+									<li><a href="#"><i class="icon-accessibility"></i> Accessibility</a></li>
+									<li class="divider"></li>
+									<li><a href="#"><i class="icon-gear"></i> All settings</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div> -->
+				</div>
+				<!-- /page header -->
+
+				<br></br>
+				<!-- Content area -->
+				<div class="content">
+					<div class="row">
+						<!-- Transform charts -->
+						<div class="col-lg-6 col-md-12 mb-4">
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Chart transforms (ISS Latitude/Longitude)</h6>
+									<div class="heading-elements">
+										<!-- <button type="button" class="btn btn-info btn-xs heading-btn" id="btn-transform">Transform</button> -->
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-transform"></div>
+									</div>
+								</div>
+							</div>
+							<!-- /transform charts -->
+						</div>
+						<div class="col-lg-6 col-md-12 mb-4">
+							<!-- Zoomable chart -->
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Zoomable chart</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-chart-zoomable"></div>
+									</div>
+								</div>
+							</div>
+							<!-- /zoomable chart -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 col-md-2">
+							<div class="panel panel-body bg-blue-400 has-bg-image">
+								<div class="media no-margin">
+									<div class="media-body">
+										<h3 class="no-margin" id="staffonline">0</h3>
+										<span class="text-uppercase text-size-mini">Staff Online</span>
+									</div>
+
+									<div class="media-right media-middle">
+										<i class="icon-bubbles10 icon-3x opacity-75"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<div class="col-sm-4 col-md-2">
+								<div class="panel panel-body text-center bg-teal-400 has-bg-image" id="meters">
+									<div class="svg-center position-relative" id="cpu_usage"></div>
+									<h2 class="mt-15 mb-5" id="cpu_usage_text">CPU: 0%</h2>
+
+
+								</div>
+							</div>
+							<div class="col-sm-4 col-md-2">
+								<div class="panel panel-body text-center bg-purple-400 has-bg-image">
+									<div class="svg-center position-relative" id="ram_usage"></div>
+									<h2 class="mt-15 mb-5" id="ram_usage_text">RAM: 0%</h2>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="panel panel-body bg-success-400 has-bg-image">
+								<div class="media no-margin">
+									<div class="media-left media-middle">
+										<i class="icon-hour-glass3 icon-3x opacity-75"></i>
+									</div>
+
+									<div class="media-body text-right">
+										<h3 class="no-margin">Service Status</h3>
+										<span class="text-uppercase text-size-mini" id="servicestatus">probably working</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-sm-6 col-md-3">
+							<div class="panel panel-body bg-indigo-400 has-bg-image">
+								<div class="media no-margin">
+									<div class="media-left media-middle">
+										<i class="icon-puzzle3 icon-3x opacity-75"></i>
+									</div>
+
+									<div class="media-body text-right">
+										<h3 class="no-margin" id="partschanged">308</h3>
+										<span class="text-uppercase text-size-mini">Parts changed today</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- Transform charts -->
+						<div class="col-lg-6 col-md-12 mb-4">
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Server Load (%) conditional updating (updates only when new value is detected)</h6>
+									<div class="heading-elements">
+										<!-- <button type="button" class="btn btn-info btn-xs heading-btn" id="btn-transform">Transform</button> -->
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-serverload"></div>
+									</div>
+								</div>
+							</div>
+							<!-- /transform charts -->
+						</div>
+						<div class="col-lg-6 col-md-12 mb-4">
+							<!-- Zoomable chart -->
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Total parts (Date formatting functionality)</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-chart-totalparts"></div>
+									</div>
+								</div>
+							</div>
+							<!-- /zoomable chart -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 mb-4">
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Data (parts broken down by product, updates live)</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-bar-chart"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3 col-md-6 mb-4">
+							<!-- Chart with subchart -->
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Chart with subchart</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-subchart"></div>
+									</div>
+								</div>
+							</div>
+							<!-- /chart with subchart -->
+						</div>
+
+						<div class="col-lg-3 col-md-6 mb-4">
+							<!-- Chart label format -->
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Chart label format</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-label-format"></div>
+									</div>
+								</div>
+							</div>
+							<!-- /chart label format -->
+						</div>
+						<!-- Chart data colors -->
+						<div class="col-lg-6 col-md-12 mb-4">
+
+
+							<div class="panel panel-flat">
+								<div class="panel-heading">
+									<h6 class="panel-title text-semibold">Chart data colors</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li>
+												<a data-action="collapse"></a>
+											</li>
+											<li>
+												<a data-action="reload"></a>
+											</li>
+											<li>
+												<a data-action="close"></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="panel-body">
+									<div class="chart-container">
+										<div class="chart" id="c3-data-color"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /chart data colors -->
+					</div>
+
+
+
+					<!-- Footer -->
+					<div class="footer text-muted">
+						Viknesh Alagappan, modified Limitless web app kit
+					</div>
+					<!-- /footer -->
+
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
+
+		</div>
+		<!-- /page content -->
+
+	</div>
+	<!-- /page container -->
+
+</body>
+
+</html>
