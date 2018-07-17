@@ -1041,6 +1041,8 @@ var statChart = new Chart(ctx, {
 });
 var btn = document.getElementById('submit');
 btn.onclick = function () {
+    document.getElementById('alt-images').innerHTML='';
+    document.getElementById('static-images').innerHTML='';
     var input = document.getElementById('myInput').value;
     var input2 = input[0].toUpperCase() + input.substr(1);
     var pokemon_index = pokemon.indexOf(input);
@@ -1069,10 +1071,7 @@ btn.onclick = function () {
         }else if(input.toLowerCase()==='gourgeist'){
             requestURL+='-average';
         }
-        var request = new XMLHttpRequest();
-        request.open('GET', requestURL);
-        request.responseType = 'json';
-        request.send();
+        
         var imgURL='https://www.smogon.com/dex/media/sprites/xy/';
         var imgcall=input.toLowerCase();
         if(imgcall.includes('tapu')){
@@ -1081,7 +1080,66 @@ btn.onclick = function () {
         if(imgcall.includes('-shield')){
             imgcall=imgcall.replace('-shield','');
         }
-        //var imgattackurl=
+        var imgattackurl='http://www.pokestadium.com/sprites/xy/';
+        var imgcall1=imgcall;
+        if(imgcall1.includes('-x')){
+            imgcall1=imgcall1.replace('-x','x');
+        }else if(imgcall1.includes('-y')){
+            imgcall1=imgcall1.replace('-y','y');
+        }
+        imgattackurl+=imgcall1;
+        //var imgnumber=2;
+        
+        var found=true;
+        //var imgnumber_=2;
+        for(var imgnumber=2;imgnumber<7;imgnumber++){
+            console.log(imgnumber);
+            //img.src = imgattackurl+'-'+imgnumber+'.gif';\
+            testImage(imgattackurl+'-'+imgnumber+'.gif',loadImage);
+            if(found==false){
+                console.log('broke');
+                break;
+            }
+        }
+        imgattackurl='http://www.pokestadium.com/sprites/xy/back/';
+        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
+        imgattackurl='http://www.pokestadium.com/sprites/xy/shiny/';
+        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
+        imgattackurl='http://www.pokestadium.com/sprites/xy/shiny/back/';
+        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
+        function loadImage(url,result){
+            if(result==="success"){
+                var img = document.createElement('img');
+                img.src=url;
+                document.getElementById('alt-images').appendChild(img)
+                img.onload=function(){
+                    img.style.height=(img.clientHeight+30)+'px';
+                }
+            }else{
+                found=false;
+            }
+        }
+        function loadImageStatic(url,result){
+            if(result==="success"){
+                var img = document.createElement('img');
+                img.src=url;
+                img.onload=function(){
+                    img.style.height=(img.clientHeight+50)+'px';
+                    // if(img.clientHeight<150){
+                    //     console.log('height<150');
+                    //     img.style.height = '175px';
+                    // }else{
+                    //     console.log('increased height');
+                    //     img.style.height+=30;
+                    // }
+                }
+                
+                img.classList.add('img-padding');
+                document.getElementById('static-images').appendChild(img);
+            }else{
+                found=false;
+            }
+        }
         // if(imgcall.includes('-standard')){
         //     imgcall=imgcall.replace('-standard','');
         // }
@@ -1095,6 +1153,12 @@ btn.onclick = function () {
         //var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
         imgURL+=imgcall;
         imgURL+='.gif';
+        requestURL+='.json'
+        var request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+        console.log(requestURL);
         document.getElementById('pImage').src=imgURL;
         request.onload = function () {
             btn.innerHTML='Submit';
@@ -1161,14 +1225,35 @@ btn.onclick = function () {
             statChart.update();
             
         }
+        request.onerror=function(){
+            btn.innerHTML='Submit';
+            btn.disabled=false;
+        }
+        request.ontimeout=function(){
+            btn.innerHTML='Submit';
+            btn.disabled=false;
+        }
     }
 }
-function checkImage(imageSrc) {
-    var img = new Image();        
-    try {
-        img.src = imageSrc;
-        return true;
-    } catch(err) {
-        return false;
-    }    
+function testImage(url, callback, timeout) {
+    timeout = timeout || 500;
+    var timedOut = false, timer;
+    var img = new Image();
+    img.onerror = img.onabort = function() {
+        if (!timedOut) {
+            clearTimeout(timer);
+            callback(url, "error");
+        }
+    };
+    img.onload = function() {
+        if (!timedOut) {
+            clearTimeout(timer);
+            callback(url, "success");
+        }
+    };
+    img.src = url;
+    timer = setTimeout(function() {
+        timedOut = true;
+        callback(url, "timeout");
+    }, timeout); 
 }
