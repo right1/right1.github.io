@@ -1081,6 +1081,7 @@ btn.onclick = function () {
         if(imgcall.includes('-shield')){
             imgcall=imgcall.replace('-shield','');
         }
+        //var imgattackurl=
         // if(imgcall.includes('-standard')){
         //     imgcall=imgcall.replace('-standard','');
         // }
@@ -1161,4 +1162,13 @@ btn.onclick = function () {
             
         }
     }
+}
+function checkImage(imageSrc) {
+    var img = new Image();        
+    try {
+        img.src = imageSrc;
+        return true;
+    } catch(err) {
+        return false;
+    }    
 }
