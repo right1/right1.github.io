@@ -482,7 +482,7 @@ var pokemon = [
     "Groudon",
     "Rayquaza",
     "Jirachi",
-    "Deoxys-Normal",
+    "Deoxys",
     "Deoxys-Attack",
     "Deoxys-Defense",
     "Deoxys-Speed",
@@ -586,7 +586,7 @@ var pokemon = [
     "Palkia",
     "Heatran",
     "Regigigas",
-    "Giratina-Altered",
+    "Giratina",
     "Cresselia",
     "Phione",
     "Manaphy",
@@ -654,7 +654,7 @@ var pokemon = [
     "Krokorok",
     "Krookodile",
     "Darumaka",
-    "Darmanitan-Standard",
+    "Darmanitan",
     "Darmanitan-Zen",
     "Maractus",
     "Dwebble",
@@ -846,7 +846,7 @@ var pokemon = [
     "Ribombee",
     "Rockruff",
     "Lycanroc",
-    "Wishiwashi-Solo",
+    "Wishiwashi",
     "Wishiwashi-School",
     "Mareanie",
     "Toxapex",
@@ -875,7 +875,6 @@ var pokemon = [
     "Pyukumuku",
     "Type: Null",
     "Silvally",
-    "Minior",
     "Komala",
     "Turtonator",
     "Togedemaru",
@@ -1049,36 +1048,50 @@ btn.onclick = function () {
     if (pokemon_index2 != -1 && pokemon_index == -1) {
         pokemon_index = pokemon_index2;
     }
-    pokemon_index++;
+    //pokemon_index++;
     if (pokemon_index != -1) {
         this.innerHTML='Loading...';
         this.disabled=true;
         var requestURL = 'https://pokeapi.co/api/v2/pokemon/';
         requestURL += input.toLowerCase();
-        if(input.toLowerCase()=='landorus' || input.toLowerCase()=='thundurus' || input.toLowerCase()=='tornadus'){
+        if(input.toLowerCase()==='landorus' || input.toLowerCase()==='thundurus' || input.toLowerCase()==='tornadus'){
             requestURL+='-incarnate';
-        }else if(input.toLowerCase()=='mimikyu'){
+        }else if(input.toLowerCase()==='mimikyu'){
             requestURL+='-disguised';
+        }else if(input.toLowerCase()==='deoxys'){
+            requestURL+='-normal';
+        }else if(input.toLowerCase()==='giratina'){
+            requestURL+='-altered';
+        }else if(input.toLowerCase()==='darmanitan'){
+            requestURL+='-standard';
+        }else if(input.toLowerCase()==='wishiwashi'){
+            requestURL+='-solo';
         }
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
         request.responseType = 'json';
         request.send();
-        var imgURL='https://img.pokemondb.net/artwork/';
+        var imgURL='https://www.smogon.com/dex/media/sprites/xy/';
+        var imgcall=input.toLowerCase();
+        if(imgcall.includes('tapu')){
+            imgcall=imgcall.replace('tapu-','tapu_');
+        }
+        if(imgcall.includes('-shield')){
+            imgcall=imgcall.replace('-shield','');
+        }
+        // if(imgcall.includes('-standard')){
+        //     imgcall=imgcall.replace('-standard','');
+        // }
+        // if(imgcall.includes('-solo')){
+        //     imgcall=imgcall.replace('-solo','');
+        // }
+        // if(imgcall.includes('-normal')){
+        //     imgcall=imgcall.replace('-normal','');
+        // }
+        //var imgURL='https://img.pokemondb.net/artwork/';
         //var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-        if(input.toLowerCase()=='minior'){
-            imgURL+='774';
-        }else{
-            imgURL+=input.toLowerCase();
-        }
-        if(imgURL.indexOf('alola')!=-1){
-            imgURL+='n';
-        }
-        imgURL+='.jpg';
-        if(input.toLowerCase()=="floette-eternal"){
-            imgURL="https://pre00.deviantart.net/0b60/th/pre/i/2015/263/9/a/eternal_flower_floette_by_alphaxxi-d9aaupf.png";
-            //imgURL="https://t00.deviantart.net/iIkqT4aQNr0Hh9BII1eSn-gv2zQ=/fit-in/700x350/filters:fixed_height(100,100):origin()/pre00/765a/th/pre/i/2014/037/b/d/a_z__s_floette_by_alounea-d75djpb.png";
-        }
+        imgURL+=imgcall;
+        imgURL+='.gif';
         document.getElementById('pImage').src=imgURL;
         request.onload = function () {
             btn.innerHTML='Submit';
