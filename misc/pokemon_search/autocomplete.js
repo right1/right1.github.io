@@ -1066,6 +1066,8 @@ btn.onclick = function () {
             requestURL+='-standard';
         }else if(input.toLowerCase()==='wishiwashi'){
             requestURL+='-solo';
+        }else if(input.toLowerCase()==='gourgeist'){
+            requestURL+='-average';
         }
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
