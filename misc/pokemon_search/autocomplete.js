@@ -1039,10 +1039,11 @@ var statChart = new Chart(ctx, {
         }
     }
 });
+var requestURL;
 var btn = document.getElementById('submit');
 btn.onclick = function () {
-    document.getElementById('alt-images').innerHTML='';
-    document.getElementById('static-images').innerHTML='';
+    
+    updateImage();
     var input = document.getElementById('myInput').value;
     var input2 = input[0].toUpperCase() + input.substr(1);
     var pokemon_index = pokemon.indexOf(input);
@@ -1052,114 +1053,17 @@ btn.onclick = function () {
     }
     //pokemon_index++;
     if (pokemon_index != -1) {
-        this.innerHTML='Loading...';
-        this.disabled=true;
-        var requestURL = 'https://pokeapi.co/api/v2/pokemon/';
-        requestURL += input.toLowerCase();
-        if(input.toLowerCase()==='landorus' || input.toLowerCase()==='thundurus' || input.toLowerCase()==='tornadus'){
-            requestURL+='-incarnate';
-        }else if(input.toLowerCase()==='mimikyu'){
-            requestURL+='-disguised';
-        }else if(input.toLowerCase()==='deoxys'){
-            requestURL+='-normal';
-        }else if(input.toLowerCase()==='giratina'){
-            requestURL+='-altered';
-        }else if(input.toLowerCase()==='darmanitan'){
-            requestURL+='-standard';
-        }else if(input.toLowerCase()==='wishiwashi'){
-            requestURL+='-solo';
-        }else if(input.toLowerCase()==='gourgeist'){
-            requestURL+='-average';
-        }
-        
-        var imgURL='https://www.smogon.com/dex/media/sprites/xy/';
-        var imgcall=input.toLowerCase();
-        if(imgcall.includes('tapu')){
-            imgcall=imgcall.replace('tapu-','tapu_');
-        }
-        if(imgcall.includes('-shield')){
-            imgcall=imgcall.replace('-shield','');
-        }
-        var imgattackurl='http://www.pokestadium.com/sprites/xy/';
-        var imgcall1=imgcall;
-        if(imgcall1.includes('-x')){
-            imgcall1=imgcall1.replace('-x','x');
-        }else if(imgcall1.includes('-y')){
-            imgcall1=imgcall1.replace('-y','y');
-        }
-        imgattackurl+=imgcall1;
-        //var imgnumber=2;
-        
-        var found=true;
-        //var imgnumber_=2;
-        for(var imgnumber=2;imgnumber<7;imgnumber++){
-            console.log(imgnumber);
-            //img.src = imgattackurl+'-'+imgnumber+'.gif';\
-            testImage(imgattackurl+'-'+imgnumber+'.gif',loadImage);
-            if(found==false){
-                console.log('broke');
-                break;
-            }
-        }
-        imgattackurl='http://www.pokestadium.com/sprites/xy/back/';
-        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
-        imgattackurl='http://www.pokestadium.com/sprites/xy/shiny/';
-        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
-        imgattackurl='http://www.pokestadium.com/sprites/xy/shiny/back/';
-        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
-        function loadImage(url,result){
-            if(result==="success"){
-                var img = document.createElement('img');
-                img.src=url;
-                document.getElementById('alt-images').appendChild(img)
-                img.onload=function(){
-                    img.style.height=(img.clientHeight+30)+'px';
-                }
-            }else{
-                found=false;
-            }
-        }
-        function loadImageStatic(url,result){
-            if(result==="success"){
-                var img = document.createElement('img');
-                img.src=url;
-                img.onload=function(){
-                    img.style.height=(img.clientHeight+50)+'px';
-                    // if(img.clientHeight<150){
-                    //     console.log('height<150');
-                    //     img.style.height = '175px';
-                    // }else{
-                    //     console.log('increased height');
-                    //     img.style.height+=30;
-                    // }
-                }
-                
-                img.classList.add('img-padding');
-                document.getElementById('static-images').appendChild(img);
-            }else{
-                found=false;
-            }
-        }
-        // if(imgcall.includes('-standard')){
-        //     imgcall=imgcall.replace('-standard','');
-        // }
-        // if(imgcall.includes('-solo')){
-        //     imgcall=imgcall.replace('-solo','');
-        // }
-        // if(imgcall.includes('-normal')){
-        //     imgcall=imgcall.replace('-normal','');
-        // }
-        //var imgURL='https://img.pokemondb.net/artwork/';
-        //var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-        imgURL+=imgcall;
-        imgURL+='.gif';
         requestURL+='.json'
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
         request.responseType = 'json';
-        request.send();
+        
         console.log(requestURL);
-        document.getElementById('pImage').src=imgURL;
+        if(this.innerHTML!='Loading...'){
+            this.innerHTML='Loading...';
+            this.disabled=true;
+            request.send();
+        }
         request.onload = function () {
             btn.innerHTML='Submit';
             btn.disabled=false;
@@ -1233,6 +1137,126 @@ btn.onclick = function () {
             btn.innerHTML='Submit';
             btn.disabled=false;
         }
+    }
+}
+var imgbtn=document.getElementById('updateimage');
+imgbtn.onclick=function(){
+    this.disabled=true;
+    updateImage();
+    this.disabled=false;
+}
+function updateImage(){
+    document.getElementById('alt-images').innerHTML='';
+    document.getElementById('static-images').innerHTML='';
+    var input = document.getElementById('myInput').value;
+    var input2 = input[0].toUpperCase() + input.substr(1);
+    var pokemon_index = pokemon.indexOf(input);
+    var pokemon_index2 = pokemon.indexOf(input2);
+    if (pokemon_index2 != -1 && pokemon_index == -1) {
+        pokemon_index = pokemon_index2;
+    }
+    //pokemon_index++;
+    if (pokemon_index != -1) {
+        
+        requestURL = 'https://pokeapi.co/api/v2/pokemon/';
+        requestURL += input.toLowerCase();
+        if(input.toLowerCase()==='landorus' || input.toLowerCase()==='thundurus' || input.toLowerCase()==='tornadus'){
+            requestURL+='-incarnate';
+        }else if(input.toLowerCase()==='mimikyu'){
+            requestURL+='-disguised';
+        }else if(input.toLowerCase()==='deoxys'){
+            requestURL+='-normal';
+        }else if(input.toLowerCase()==='giratina'){
+            requestURL+='-altered';
+        }else if(input.toLowerCase()==='darmanitan'){
+            requestURL+='-standard';
+        }else if(input.toLowerCase()==='wishiwashi'){
+            requestURL+='-solo';
+        }else if(input.toLowerCase()==='gourgeist'){
+            requestURL+='-average';
+        }
+        
+        var imgURL='https://www.smogon.com/dex/media/sprites/xy/';
+        var imgcall=input.toLowerCase();
+        if(imgcall.includes('tapu')){
+            imgcall=imgcall.replace('tapu-','tapu_');
+        }
+        if(imgcall.includes('-shield')){
+            imgcall=imgcall.replace('-shield','');
+        }
+        var imgattackurl='http://www.pokestadium.com/sprites/xy/';
+        var imgcall1=imgcall;
+        if(imgcall1.includes('-x')){
+            imgcall1=imgcall1.replace('-x','x');
+        }else if(imgcall1.includes('-y')){
+            imgcall1=imgcall1.replace('-y','y');
+        }
+        imgattackurl+=imgcall1;
+        //var imgnumber=2;
+        
+        var found=true;
+        //var imgnumber_=2;
+        for(var imgnumber=2;imgnumber<7;imgnumber++){
+            //img.src = imgattackurl+'-'+imgnumber+'.gif';\
+            testImage(imgattackurl+'-'+imgnumber+'.gif',loadImage);
+            if(found==false){
+                console.log('broke');
+                break;
+            }
+        }
+        imgattackurl='http://www.pokestadium.com/sprites/xy/back/';
+        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
+        imgattackurl='http://www.pokestadium.com/sprites/xy/shiny/';
+        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
+        imgattackurl='http://www.pokestadium.com/sprites/xy/shiny/back/';
+        testImage(imgattackurl+imgcall1+'.gif',loadImageStatic);
+        function loadImage(url,result){
+            if(result==="success"){
+                var img = document.createElement('img');
+                img.src=url;
+                document.getElementById('alt-images').appendChild(img)
+                img.onload=function(){
+                    img.style.height=(img.clientHeight+30)+'px';
+                }
+            }else{
+                found=false;
+            }
+        }
+        function loadImageStatic(url,result){
+            if(result==="success"){
+                var img = document.createElement('img');
+                img.src=url;
+                img.onload=function(){
+                    img.style.height=(img.clientHeight+50)+'px';
+                    // if(img.clientHeight<150){
+                    //     console.log('height<150');
+                    //     img.style.height = '175px';
+                    // }else{
+                    //     console.log('increased height');
+                    //     img.style.height+=30;
+                    // }
+                }
+                
+                img.classList.add('img-padding');
+                document.getElementById('static-images').appendChild(img);
+            }else{
+                found=false;
+            }
+        }
+        // if(imgcall.includes('-standard')){
+        //     imgcall=imgcall.replace('-standard','');
+        // }
+        // if(imgcall.includes('-solo')){
+        //     imgcall=imgcall.replace('-solo','');
+        // }
+        // if(imgcall.includes('-normal')){
+        //     imgcall=imgcall.replace('-normal','');
+        // }
+        //var imgURL='https://img.pokemondb.net/artwork/';
+        //var imgURL='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+        imgURL+=imgcall;
+        imgURL+='.gif';
+        document.getElementById('pImage').src=imgURL;
     }
 }
 function testImage(url, callback, timeout) {
