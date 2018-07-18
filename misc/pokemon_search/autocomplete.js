@@ -1050,9 +1050,30 @@ btn.onclick = function () {
     var pokemon_index2 = pokemon.indexOf(input2);
     if (pokemon_index2 != -1 && pokemon_index == -1) {
         pokemon_index = pokemon_index2;
+        input=input2;
+    }
+    if(input.includes(': ')){
+        input=input.replace(': ','-');
     }
     //pokemon_index++;
     if (pokemon_index != -1) {
+        requestURL = 'https://pokeapi.co/api/v2/pokemon/';
+        requestURL += input.toLowerCase();
+        if(input.toLowerCase()==='landorus' || input.toLowerCase()==='thundurus' || input.toLowerCase()==='tornadus'){
+            requestURL+='-incarnate';
+        }else if(input.toLowerCase()==='mimikyu'){
+            requestURL+='-disguised';
+        }else if(input.toLowerCase()==='deoxys'){
+            requestURL+='-normal';
+        }else if(input.toLowerCase()==='giratina'){
+            requestURL+='-altered';
+        }else if(input.toLowerCase()==='darmanitan'){
+            requestURL+='-standard';
+        }else if(input.toLowerCase()==='wishiwashi'){
+            requestURL+='-solo';
+        }else if(input.toLowerCase()==='gourgeist'){
+            requestURL+='-average';
+        }
         requestURL+='.json'
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
@@ -1154,28 +1175,13 @@ function updateImage(){
     var pokemon_index2 = pokemon.indexOf(input2);
     if (pokemon_index2 != -1 && pokemon_index == -1) {
         pokemon_index = pokemon_index2;
+        input=input2;
+    }
+    if(input.includes(': ')){
+        input=input.replace(': ','-');
     }
     //pokemon_index++;
     if (pokemon_index != -1) {
-        
-        requestURL = 'https://pokeapi.co/api/v2/pokemon/';
-        requestURL += input.toLowerCase();
-        if(input.toLowerCase()==='landorus' || input.toLowerCase()==='thundurus' || input.toLowerCase()==='tornadus'){
-            requestURL+='-incarnate';
-        }else if(input.toLowerCase()==='mimikyu'){
-            requestURL+='-disguised';
-        }else if(input.toLowerCase()==='deoxys'){
-            requestURL+='-normal';
-        }else if(input.toLowerCase()==='giratina'){
-            requestURL+='-altered';
-        }else if(input.toLowerCase()==='darmanitan'){
-            requestURL+='-standard';
-        }else if(input.toLowerCase()==='wishiwashi'){
-            requestURL+='-solo';
-        }else if(input.toLowerCase()==='gourgeist'){
-            requestURL+='-average';
-        }
-        
         var imgURL='https://www.smogon.com/dex/media/sprites/xy/';
         var imgcall=input.toLowerCase();
         if(imgcall.includes('tapu')){
@@ -1183,6 +1189,9 @@ function updateImage(){
         }
         if(imgcall.includes('-shield')){
             imgcall=imgcall.replace('-shield','');
+        }
+        if(imgcall.includes('-null')){
+            imgcall=imgcall.replace('-null','_null');
         }
         var imgattackurl='http://www.pokestadium.com/sprites/xy/';
         var imgcall1=imgcall;
@@ -1260,7 +1269,7 @@ function updateImage(){
     }
 }
 function testImage(url, callback, timeout) {
-    timeout = timeout || 500;
+    timeout = timeout || 5000;
     var timedOut = false, timer;
     var img = new Image();
     img.onerror = img.onabort = function() {
