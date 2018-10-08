@@ -14,7 +14,7 @@
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <style>
-    textarea {
+    .textarea-hidden {
       position: absolute;
       left: -100%;
     }
@@ -30,22 +30,26 @@
 
     <div>
       <h1>List format converter</h1>
+
       <button id="btnConvert" class="btn btn-success">Convert</button>
       <button id="btnCopy" class="btn btn-primary">Copy to clipboard</button>
-      <button id="btnNumDelim" class="btn btn-warning">Change Num Delim</button>
-      <!-- <div class="dropdown" style="display:inline-block">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <!-- <button id="btnNumDelim" class="btn btn-warning">Change Num Delim</button> -->
+      <div class="dropdown" style="display:inline-block">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Settings
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <a id="btnNumDelim" class="dropdown-item" href="#">Change Num Delim</a>
-          <a class="dropdown-item disabled" href="#">Autoformat</a>
+          <a id="newlineToggle" class="dropdown-item" href="#">Add newline (Currently <span id="newlineStatus">OFF</span>)</a>
           <a class="dropdown-item disabled" href="#">Something else here</a>
         </div>
-      </div> -->
+      </div>
+      <!-- <button id="viewInput" class="btn btn-info" data-toggle="modal" data-target="#viewUserInput">View your text</button> -->
       <button type="button" class="btn btn-info" data-toggle="modal" data-target="#info">
         Info
       </button>
+
 
       <br></br>
       <input style="width: 15vh" placeholder="Splitter 1" id="splitter1" type="text">
@@ -62,9 +66,10 @@
       </div>
       <br></br>
       <div style="display:inline-block;width:10vw"></div>
-      <input style="height:30vh;width:80vw" placeholder="Text to convert" id="userInput" type="text">
+      <textarea name="textarea" id="userInput1" style="width:60vw;height:150px;"></textarea>
+      <input style="height:40vh;width:80vw;display:none" placeholder="Text to convert" id="userInput" type="text">
       <pre id="result">Result will go here</pre>
-      <div class="modal"  id="info" tabindex="-1" role="dialog">
+      <div class="modal" id="info" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -81,6 +86,7 @@
               <p>If the splitter is numbered (eg list is 1. 2. 3. ..) type NUM (all caps) into the respective splitter
                 input (this will default to replacing the . after the number, to change that click the 'Change Num
                 Delim' button)</p>
+              <p>If bullets are space separated (eg \n already present) change the setting to add a new line</p>
               <p>How to paste:</p>
               <p>1. Paste into the formatted list</p>
               <p>2. Select (highlight) the content you just pasted</p>
@@ -93,8 +99,27 @@
             </div>
           </div>
         </div>
-        
+
       </div>
+      <!-- <div class="modal" id="viewUserInput" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Info</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <pre id="userInputView"></pre>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+
+      </div> -->
     </div>
 
   </div><!-- /.container -->
@@ -112,6 +137,7 @@
   <script src="js/bootstrap.min.js"></script>
   <script>
     $(function () {
+      var addSpace = "\n";
       $('.numDelim').hide();
       $('#btnNumDelim').click(function () {
         if ($('.numDelim').css('display') == 'none') {
@@ -120,10 +146,23 @@
           $('.numDelim').hide();
         }
       })
+      $('#newlineToggle').click(function () {
+        if (addSpace == "") {
+          addSpace = "\n";
+          $('#newlineStatus').text("ON");
+        } else {
+          addSpace = "";
+          $('#newlineStatus').text("OFF");
+        }
+      })
+      $('#userInput1').bind('input propertychange', function() {
+        $('#userInput').val($('#userInput1').val());
+      })
       var result;
       $('#btnCopy').click(function () {
         const copyText = document.getElementById("result").textContent;
         const textArea = document.createElement('textarea');
+        textArea.classList.add('textarea-hidden');
         textArea.textContent = copyText;
         document.body.append(textArea);
         textArea.select();
@@ -134,6 +173,9 @@
           $('#btnCopy').text("Copy to clipboard");
         }, 2000);
       });
+      // $('#viewUserInput').click(function(){
+      //   $('#userInputView').text($('#userInput').val());
+      // })
       $('#btnConvert').click(function () {
         // var finalText="";
         var userText = $('#userInput').val();
@@ -151,43 +193,47 @@
           alert("Only use one splitter for Numbered input");
           return;
         }
-        var splitterCount = 1;
+        var splitterCount = 0;
         if (split3 != "") {
           splitterCount = 3;
         } else if (split2 != "") {
           splitterCount = 2;
+        } else if (split1 != "") {
+          splitterCount = 1;
+        } else {
+          return;
         }
-        while (splitterCount > 2 && split3 != "NUM" && userText.indexOf(split3) != -1) {
-          userText = userText.replace(split3, "\n\t\t\t");
+        while (splitterCount > 2 && split3 != "" && split3 != "NUM" && userText.indexOf(split3) != -1) {
+          userText = userText.replace(split3, addSpace + "\t\t\t");
         }
         var keepReplacing = true;
         while (splitterCount > 2 && split3 == "NUM" && keepReplacing) {
           keepReplacing = false;
           for (var i = 100; i > 0; i--) {
             if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
-            userText = userText.replace(i + numDelim, "\n\t\t\t");
+            userText = userText.replace(i + numDelim, addSpace + "\t\t\t");
           }
         }
         keepReplacing = true;
-        while (splitterCount > 1 && userText.indexOf(split2) != -1) {
-          userText = userText.replace(split2, "\n\t\t");
+        while (splitterCount > 1 && split2 != "" && userText.indexOf(split2) != -1) {
+          userText = userText.replace(split2, addSpace + "\t\t");
         }
         while (splitterCount > 1 && split2 == "NUM" && keepReplacing) {
           keepReplacing = false;
           for (var i = 100; i > 0; i--) {
             if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
-            userText = userText.replace(i + numDelim, "\n\t\t");
+            userText = userText.replace(i + numDelim, addSpace + "\t\t");
           }
         }
         keepReplacing = true;
-        while (splitterCount > 0 && userText.indexOf(split1) != -1) {
-          userText = userText.replace(split1, "\n\t");
+        while (splitterCount > 0 && split1 != "" && userText.indexOf(split1) != -1) {
+          userText = userText.replace(split1, addSpace + "\t");
         }
         while (splitterCount > 0 && split1 == "NUM" && keepReplacing) {
           keepReplacing = false;
           for (var i = 100; i > 0; i--) {
             if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
-            userText = userText.replace(i + numDelim, "\n\t");
+            userText = userText.replace(i + numDelim, addSpace + "\t");
           }
         }
         result = userText;
