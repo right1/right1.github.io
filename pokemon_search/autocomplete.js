@@ -1074,7 +1074,7 @@ btn.onclick = function () {
         }else if(input.toLowerCase()==='gourgeist'){
             requestURL+='-average';
         }
-        requestURL+='.json'
+        requestURL+='/'
         var request = new XMLHttpRequest();
         request.open('GET', requestURL);
         request.responseType = 'json';
