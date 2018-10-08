@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="https://puu.sh/BHK17/ffefb78022.png">
+
+  <title>PDF to notes</title>
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
+
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    textarea {
+      position: absolute;
+      left: -100%;
+    }
+  </style>
+
+</head>
+
+<body>
+
+
+
+  <div class="container">
+
+    <div>
+      <h1>PDF to notes </h1>
+      <label class="btn btn-danger btn-file" style="display:inline-block">
+        Choose file: <span id="filename">No file selected</span><input type="file" id="pdfUpload" name="pdfUpload" accept=".pdf" style="display: none;">
+      </label>
+      <label id="btnConvert" class="btn btn-success">Convert</label>
+      <label id="btnCopy" class="btn btn-primary">Copy to clipboard</label>
+      <label id="btnNumDelim" class="btn btn-warning">Change Num Delim</label>
+      <!-- <div class="dropdown" style="display:inline-block">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Settings
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a id="btnNumDelim" class="dropdown-item" href="#">Change Num Delim</a>
+          <a class="dropdown-item disabled" href="#">Autoformat</a>
+          <a class="dropdown-item disabled" href="#">Something else here</a>
+        </div>
+      </div> -->
+      <label class="btn btn-info" data-toggle="modal" data-target="#info">
+        Info
+      </label>
+      
+      <br>
+      
+      <input style="width: 15vh" placeholder="Splitter 1" id="splitter1" type="text">
+      <div style="display:inline-block;width:3vh"></div>
+      <input style="width: 15vh" placeholder="Splitter 2" id="splitter2" type="text">
+      <div style="display:inline-block;width:3vh"></div>
+      <input style="width: 15vh" placeholder="Splitter 3" id="splitter3" type="text">
+      <div style="display:inline-block" class="numDelim">
+
+        <div style="display:inline-block">
+          <p>Num Delim:</p>
+        </div>
+        <input style="width: 15vh" placeholder="Number delim" value="." id="numDelim" type="text">
+      </div>
+      <div style="height:1vh"></div>
+      <h4>Tweak these to exclude elements (0=everything included)</h4>
+      <div style="display:inline-block" class="form-check">
+        <input class="form-check-input" type="checkbox" id="pageNumberDetection" value="option1">
+        <label class="form-check-label" for="inlineCheckbox1">Remove page numbers</label>
+      </div>
+      <p style="display:inline-block">|| Bad words (separate with comma):</p>
+      <input style="width: 50vh" placeholder="Phrases with this will be excluded." id="badWords" type="text">
+      <br>
+      <div style="display:inline-block">
+        <p style="display:inline-block">Elements to exclude at beginning of page:</p>
+        <input style="width: 15vh" placeholder="Exclude at beginning of page" id="excludeStart" type="number" value="0">
+        <p style="display:inline-block">At end:</p>
+        <input style="width: 15vh" placeholder="Exclude at end of page" id="excludeEnd" type="number" value="0">
+        <div style="height:1vh"></div>
+        <p style="display:inline-block">Page start:</p>
+        <input style="width: 15vh" placeholder="page start" id="pageStart" type="number" value="0">
+        <p style="display:inline-block">Page end:</p>
+        <input style="width: 15vh" placeholder="page end" id="pageEnd" type="number" value="0">
+      </div>
+      
+      <br></br>
+      
+      <div style="display:inline-block;width:10vw"></div>
+      
+      <!-- <input style="height:30vh;width:80vw" placeholder="Text to convert" id="userInput" type="text"> -->
+      <hr></hr>
+      <pre id="result">Result will go here</pre>
+      <div class="modal"  id="info" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Info</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Splitters: defines what indentation you want. Splitter1=highest nested bullet point, Splitter2 inside
+                Splitter1, Splitter3 inside splitter2</p>
+              <p>If copying from another formatted list this will be the type of bullet point at the beginning (copy
+                paste that into each respective splitter box)</p>
+              <p>If the splitter is numbered (eg list is 1. 2. 3. ..) type NUM (all caps) into the respective splitter
+                input (this will default to replacing the . after the number, to change that click the 'Change Num
+                Delim' button)</p>
+              <p>How to paste (if this doesn't work properly try with Google Docs):</p>
+              <p>1. Paste (try first into an empty file)</p>
+              <p>2. Select (highlight) the content you just pasted (Ctrl+A for an empty file)</p>
+              <p>3. Enable the list formatting option (if enabled, hit it twice)<img src="https://puu.sh/BHK17/ffefb78022.png" alt="Google docs pic"></p>
+              <br></br>
+              <p>Made by Viknesh Alagappan, last updated 10/8/18</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+  </div><!-- /.container -->
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script src="js/pdftolist.js"></script>
+</body>
+
+</html>
