@@ -143,8 +143,9 @@ $(function () {
                             }
                             if(($('#splitter3').val()=='NUM'||$('#splitter2').val()=='NUM'||$('#splitter1').val()=='NUM')&&textItem.length>3){
                                 for (var index = 100; index > 0; index--) {
-                                    if (textItem.indexOf(index + $('#numDelim').val()) != -1)
-                                    textItem = textItem.replace(index + $('#numDelim').val(), index+"PLA.'CEHOLDER"+$('#numDelim').val());
+                                    if (textItem.indexOf(index + $('#numDelim').val()) != -1&&(index + $('#numDelim').val()).length*4<=textItem.length){
+                                        textItem = textItem.replace(index + $('#numDelim').val(), index+"PLA.'CEHOLDER"+$('#numDelim').val());
+                                    }
                                 }
                             }
                             finalText+=textItem;
