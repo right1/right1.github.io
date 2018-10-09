@@ -21,12 +21,12 @@ $(function () {
 
         console.log('The file "' + fileName + '" has been selected.');
     });
-    $('.numDelim').hide();
-    $('#btnNumDelim').click(function () {
-        if ($('.numDelim').css('display') == 'none') {
-            $('.numDelim').show();
+    $('.options').hide();
+    $('#btnOptions').click(function () {
+        if ($('.options').css('display') == 'none') {
+            $('.options').show();
         } else {
-            $('.numDelim').hide();
+            $('.options').hide();
         }
     })
     var result;
@@ -181,9 +181,9 @@ $(function () {
     function convertText(userText) {
         var headerDelim = ($('#splitter1').val() == 'BIG') ? true : false;
         // console.log(userText);
-        var split1 = $('#splitter1').val();
-        var split2 = $('#splitter2').val();
-        var split3 = $('#splitter3').val();
+        var split1 = $('#splitter1').val().split(',');
+        var split2 = $('#splitter2').val().split(',');
+        var split3 = $('#splitter3').val().split(',');
         var numDelim = $('#numDelim').val();
         if (split1 == "NUM") {
             if (split2 == "NUM" || split3 == "NUM") {
@@ -195,18 +195,23 @@ $(function () {
             return;
         }
         var splitterCount = 0;
-        if (split3 != "") {
+        console.log(split3);
+        if (split3.length>0&&split3[0]!="") {
             splitterCount = 3;
-        } else if (split2 != "") {
+        } else if (split2.length>0&&split2[0]!="") {
             splitterCount = 2;
-        } else if (split1 != "") {
+        } else if (split1.length>0&&split1[0]!="") {
             splitterCount = 1;
         }
-        while (splitterCount > 2 && split3 != "NUM" && userText.indexOf(split3) != -1) {
-            userText = userText.replace(split3, "\n\t\t\t");
+        if (splitterCount > 2) {
+            for(splitter in split3){
+                while(split3[splitter] != "NUM" &&split3[splitter] != "" && userText.indexOf(split3[splitter]) != -1){
+                    userText = userText.replace(split3[splitter], "\n\t\t\t");
+                }
+            }
         }
         var keepReplacing = true;
-        while (splitterCount > 2 && split3 == "NUM" && keepReplacing) {
+        while (splitterCount > 2 && split3.indexOf("NUM")!=-1  && keepReplacing) {
             keepReplacing = false;
             for (var i = 100; i > 0; i--) {
                 if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
@@ -214,10 +219,14 @@ $(function () {
             }
         }
         keepReplacing = true;
-        while (splitterCount > 1 && userText.indexOf(split2) != -1) {
-            userText = userText.replace(split2, "\n\t\t");
+        if (splitterCount > 1) {
+            for(splitter in split2){
+                while(split2[splitter] != "NUM" && split2[splitter] != "" &&userText.indexOf(split2[splitter]) != -1){
+                    userText = userText.replace(split2[splitter], "\n\t\t");
+                }
+            }
         }
-        while (splitterCount > 1 && split2 == "NUM" && keepReplacing) {
+        while (splitterCount > 1 && split2.indexOf("NUM")!=-1 && keepReplacing) {
             keepReplacing = false;
             for (var i = 100; i > 0; i--) {
                 if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
@@ -225,10 +234,14 @@ $(function () {
             }
         }
         keepReplacing = true;
-        while (splitterCount > 0 && userText.indexOf(split1) != -1) {
-            userText = userText.replace(split1, "\n\t");
+        if (splitterCount > 1) {
+            for(splitter in split1){
+                while(split1[splitter] != "NUM" &&split1[splitter] != "NUM" && userText.indexOf(split1[splitter]) != -1){
+                    userText = userText.replace(split1[splitter], "\n\t\t");
+                }
+            }
         }
-        while (splitterCount > 0 && split1 == "NUM" && keepReplacing) {
+        while (splitterCount > 0 && split1.indexOf("NUM")!=-1 && keepReplacing) {
             keepReplacing = false;
             for (var i = 100; i > 0; i--) {
                 if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
