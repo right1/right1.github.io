@@ -76,12 +76,19 @@
       </div>
       <div style="height:1vh"></div>
       <h4>Tweak these to exclude elements (0=everything included)</h4>
+      <p style="display:inline-block">Ignore threshold (pages with character count below this will be ignored):</p>
+        <input style="width: 15vh" placeholder="ignore" id="ignoreThreshold" type="number" value="0">
+      
       <div style="display:inline-block" class="form-check">
         <input class="form-check-input" type="checkbox" id="pageNumberDetection" value="option1">
         <label class="form-check-label" for="inlineCheckbox1">Remove page numbers</label>
       </div>
-      <p style="display:inline-block">|| Bad words (separate with comma):</p>
+      <br>
+      <p style="display:inline-block">Bad words (separate with comma):</p>
       <input style="width: 50vh" placeholder="Phrases with this will be excluded." id="badWords" type="text">
+      <br>
+      <p style="display:inline-block">Nasty words (separate with comma):</p>
+      <input style="width: 50vh" placeholder="Slides/Pages with this will be excluded." id="nastyWords" type="text">
       <br>
       <div style="display:inline-block">
         <p style="display:inline-block">Elements to exclude at beginning of page:</p>

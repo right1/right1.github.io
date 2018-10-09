@@ -4,7 +4,7 @@ $(function () {
     var badWords=[];
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
     var result_PDF;
-    
+    var nastyWords=[];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
     $('input[type="file"]').change(function (e) {
         var fileName = (e.target.files[0])?e.target.files[0].name:"No file selected";
@@ -51,7 +51,10 @@ $(function () {
         var pageEnd=parseInt($('#pageEnd').val());
         var excludeStart=parseInt($('#excludeStart').val());
         var excludeEnd=parseInt($('#excludeEnd').val());
+        var ignoreThreshold=parseInt($('#ignoreThreshold').val());
+        if(ignoreThreshold==NaN)ignoreThreshold=0;
         badWords=$('#badWords').val().split(',');
+        nastyWords=$('#nastyWords').val().split(',');
         fileReader.onload = function () {
             var typedarray = new Uint8Array(this.result);
 
@@ -65,7 +68,7 @@ $(function () {
                 var count=pageStart;
                 
                     for(var i=pageStart;i<=pageEnd;i++){
-                    getPageText(pdf,i,excludeStart,excludeEnd,function(result,index){
+                    getPageText(pdf,i,excludeStart,excludeEnd,ignoreThreshold,function(result,index){
                         finalText_array[index-1]=result;
                         if(finalText_array.length===pdf.numPages&&finalText_array.every(element => element !== null)){
                             console.log(finalText_array);
@@ -86,7 +89,7 @@ $(function () {
         // console.log(userText);
 
     });
-    function getPageText(pdf,i,excludeStart,excludeEnd,callback){
+    function getPageText(pdf,i,excludeStart,excludeEnd,ignore,callback){
         var finalText="";
         
         var addTab=false;
@@ -94,7 +97,22 @@ $(function () {
             // you can now use *page* here
             page.getTextContent().then(function(textContent){
                 
-                console.log(textContent);
+                // console.log(textContent);
+                var charCount=0;
+                var nastyWord=false;
+                for(var j=0;j<textContent.items.length;j++){
+                    for(var k=0;k<nastyWords.length;k++){
+                        if(nastyWords[k].length>1&&textContent.items[j].str.indexOf(nastyWords[k])!=-1){
+                            nastyWord=true;
+                            break;
+                        }
+                    }
+                    charCount+=textContent.items[j].str.indexOf(nastyWord)!=-1;
+                    charCount+=textContent.items[j].str.length;
+                }
+                if(charCount<ignore||nastyWord){
+                    return;
+                }
                 if(!$('#addNewLine').is(':checked'))finalText+='\n';
                 for(var j=excludeStart;j<textContent.items.length-excludeEnd;j++){
                     var detectNumber=textContent.items[j].str.replace(/ /g,"");
