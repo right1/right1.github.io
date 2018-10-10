@@ -9,7 +9,7 @@
   <link rel="icon" href="https://puu.sh/BHK17/ffefb78022.png">
 
   <title>PDF to notes</title>
-  <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
+  <!-- <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/"> -->
 
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -95,30 +95,24 @@
       </div>
 
       <br>
-      <p style="display:inline-block">Suggested splitters (leave empty to use these):</p>
+      <!-- <p>Suggested splitters (leave empty to use these, click to remove any of them):</p> -->
+      <button type="button" id="suggestedSplitterBtn" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="leave empty to use these, click on splitter to remove, click this button to copy all suggested splitters">
+          <span id="suggestedSplitterBtn_text">Suggested Splitters </span><span class="badge bg-dark" style="font-size:1em">&#9432;</span>
+      </button>
       <!--
       -->
-      <div style="display:inline-block;width:3vh"></div>
+      <!-- <div style="display:inline-block;width:3vh"></div> -->
       <!--
-      --><code id="suggestedSplitter1">:D</code>
+      --><code id="suggestedSplitter1" class="suggestedSplitter">:D</code><!--
+      --><div style="display:inline-block;width:3vh"></div>
       <!--
+      --><code id="suggestedSplitter2" class="suggestedSplitter">:D</code><!--
+      --><div style="display:inline-block;width:3vh"></div><!--
+      --><code id="suggestedSplitter3" class="suggestedSplitter">:D</code><!--
+      --><div style="display:inline-block;width:3vh"></div><!--
+      --><code id="suggestedSplitter4" class="suggestedSplitter">:D</code><!--
       -->
-      <div style="display:inline-block;width:3vh"></div>
-      <!--
-      --><code id="suggestedSplitter2">:D</code>
-      <!--
-      -->
-      <div style="display:inline-block;width:3vh"></div>
-      <!--
-      --><code id="suggestedSplitter3">:D</code>
-      <!--
-      -->
-      <div style="display:inline-block;width:3vh"></div>
-      <!--
-      --><code id="suggestedSplitter4">:D</code>
-      <!--
-      -->
-      <div></div>
+      <br></br>
       <input style="width: 15vh" placeholder="Splitter 1" id="splitter1" type="text">
       <div style="display:inline-block;width:3vh"></div>
       <input style="width: 15vh" placeholder="Splitter 2" id="splitter2" type="text">

@@ -1,5 +1,7 @@
-var userPDF
+var userPDF;
+const BLACKLIST=['\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239)];
 $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
     // $('#pageNumberDetection').click();
     function showInfoBanner() {
         setTimeout(function () {
@@ -14,7 +16,7 @@ $(function () {
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
     var result_PDF;
     var nastyWords = [];
-
+    var suggestedSplitters=[];
     var firstChars = [];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
     $('input[type="file"]').change(function (e) {
@@ -43,6 +45,24 @@ $(function () {
         }
     })
     var result;
+    $('.suggestedSplitter').click(function(e){
+        this.innerText="";
+    })
+    $('#suggestedSplitterBtn').click(function(){
+        var tmp=$('#suggestedSplitterBtn_text').text();
+        $('#suggestedSplitterBtn_text').text('Copied the text: '+suggestedSplitters.join('')+'\t');
+        setTimeout(function(){
+            $('#suggestedSplitterBtn_text').text(tmp);
+        },2500);
+        for(var i=1;i<=suggestedSplitters.length;i++){
+            $('#suggestedSplitter'+i).text(suggestedSplitters[i-1]);
+        }
+        const textArea = document.createElement('textarea');
+        textArea.textContent = suggestedSplitters.join('');
+        document.body.append(textArea);
+        textArea.select();
+        document.execCommand("copy");
+    })
     $('#btnCopy').click(function () {
         const copyText = document.getElementById("result").textContent;
         const textArea = document.createElement('textarea');
@@ -90,7 +110,7 @@ $(function () {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
                         finalText_array[index] = result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
-                            console.log(firstChars);
+                            // console.log(firstChars);
 
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
                         }
@@ -150,7 +170,7 @@ $(function () {
                 for (var i = pageStart; i <= pageEnd; i++) {
 
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
-                        console.log(result);
+                        // console.log(result);
                         finalText_array[index] = result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             if (finalText_array.every(element => element === "EMPTYPAGE")) {
@@ -181,7 +201,7 @@ $(function () {
                                 }
                             }
 
-                            console.log(JSON.stringify(foundSplitters));
+                            // console.log(JSON.stringify(foundSplitters));
                             while (Object.keys(foundSplitters).length >= 8) {
                                 var lowestVal;
                                 var lowestVal_value = Number.MAX_SAFE_INTEGER;
@@ -197,6 +217,7 @@ $(function () {
                             for (var splitterResetCount = 1; splitterResetCount <= 4; splitterResetCount++) {
                                 $('#suggestedSplitter' + splitterResetCount).text('');
                             }
+                            suggestedSplitters=[];
                             while (Object.keys(foundSplitters).length > 0) {
                                 var highestVal;
                                 var highestVal_value = -1;
@@ -206,10 +227,21 @@ $(function () {
                                         highestVal_value = foundSplitters[key];
                                     }
                                 });
-                                if (highestVal_value > 2 && splitterDisplayCount <= 4 && highestVal.indexOf(',') == -1 && highestVal.indexOf("'") == -1 && highestVal.indexOf("-") == -1 && highestVal.indexOf(String.fromCharCode(160)) == -1 && highestVal.indexOf(String.fromCharCode(8239)) == -1) {
-                                    console.log(highestVal);
-                                    $('#suggestedSplitter' + splitterDisplayCount).text(highestVal);
-                                    splitterDisplayCount++;
+                                if (highestVal_value > 2 && splitterDisplayCount <= 4 &&highestVal!="") {
+                                    // console.log(highestVal);
+                                    var blacklisted=false;
+                                    for(var blk=0;blk<BLACKLIST.length;blk++){
+                                        if(highestVal.indexOf(BLACKLIST[blk])!=-1){
+                                            blacklisted=true;
+                                            break;
+                                        }
+                                    }
+                                    if(!blacklisted){
+                                        $('#suggestedSplitter' + splitterDisplayCount).text(highestVal);
+                                        splitterDisplayCount++;
+                                        suggestedSplitters.push(highestVal);
+                                    }
+                                    
                                 }
 
                                 delete foundSplitters[highestVal];
@@ -335,9 +367,6 @@ $(function () {
                     else split3.push($('#suggestedSplitter' + i).text());
                 }
             }
-            console.log(split1);
-            console.log(split2);
-            console.log(split3);
         }
 
         for (x in split1) {
@@ -437,6 +466,7 @@ $(function () {
         }
         var userTextArray_joined = userTextArray.join('\n');
         userTextArray_joined = userTextArray_joined.replace(/PLA.'CEHOLDER/g, '')
+        console.log(userTextArray);
         return userTextArray_joined;
     }
     var lastTarget = null;
