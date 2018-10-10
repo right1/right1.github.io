@@ -29,6 +29,8 @@ $(function () {
 
 
         console.log('The file "' + fileName + '" has been selected.');
+        $('#loadingData').text('Splitters');
+        $('#loadingBanner').show(100);
         detectSplitters();
     });
     $('.options').hide();
@@ -54,6 +56,8 @@ $(function () {
         }, 2000);
     });
     $('#btnConvert').click(function () {
+        $('#loadingData').text('Result');
+        $('#loadingBanner').show(100);
         firstChars=[];
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
@@ -84,7 +88,7 @@ $(function () {
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
                         finalText_array[index] = result;
-                        if (finalText_array.length === pageEnd && finalText_array.every(element => element !== null)) {
+                        if (finalText_array.length-1 === pageEnd && finalText_array.every(element => element !== null)) {
                             console.log(firstChars);
                             
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
@@ -201,7 +205,7 @@ $(function () {
                                         highestVal_value=foundSplitters[key];
                                     }
                                 });
-                                if(highestVal_value>2&&splitterDisplayCount<=4&&highestVal.indexOf(',')==-1&&highestVal.indexOf(String.fromCharCode(160))==-1&&highestVal.indexOf(String.fromCharCode(8239))==-1){
+                                if(highestVal_value>2&&splitterDisplayCount<=4&&highestVal.indexOf(',')==-1&&highestVal.indexOf("'")==-1&&highestVal.indexOf("-")==-1&&highestVal.indexOf(String.fromCharCode(160))==-1&&highestVal.indexOf(String.fromCharCode(8239))==-1){
                                     console.log(highestVal);
                                     $('#suggestedSplitter'+splitterDisplayCount).text(highestVal);
                                     splitterDisplayCount++;
@@ -209,6 +213,8 @@ $(function () {
                                 
                                 delete foundSplitters[highestVal];
                             }
+                            
+                            $('#loadingBanner').hide(250);
                         }
 
                     });
@@ -301,14 +307,39 @@ $(function () {
     }
     function convertFromPDF(text) {
         result_PDF = convertText(text);
+        $('#loadingBanner').hide(250);
         $('#result').text(result_PDF);
     }
     function convertText(userText) {
         var headerDelim = ($('#splitter1').val() == 'BIG') ? true : false;
         // console.log(userText);
+        var useSuggestedSplitters=false;
         var split1 = $('#splitter1').val().split(',');
         var split2 = $('#splitter2').val().split(',');
         var split3 = $('#splitter3').val().split(',');
+        if((split1.length==0||(split1.length==1&&split1[0]==''))&&(split2.length==0||(split2.length==1&&split2[0]==''))&&(split3.length==0||(split3.length==1&&split3[0]==''))){
+            useSuggestedSplitters=true;
+            setTimeout(function(){
+                $('#suggestedBanner').show(250);
+            },1);
+            setTimeout(function(){
+                $('#suggestedBanner').hide(250);
+            },3000);
+            split1=[];
+            split2=[];
+            split3=[];
+            for(var i=1;i<=4;i++){
+                if($('#suggestedSplitter'+i).text().length>0){
+                    if(i<=2)split1.push($('#suggestedSplitter'+i).text());
+                    else if(i==3)split2.push($('#suggestedSplitter'+i).text());
+                    else split3.push($('#suggestedSplitter'+i).text());
+                }
+            }
+            console.log(split1);
+            console.log(split2);
+            console.log(split3);
+        }
+        
         for(x in split1){
             if(split1[x].match(/[0-9]/i)){
                 split1[x]="NUM";
@@ -339,7 +370,6 @@ $(function () {
             return;
         }
         var splitterCount = 0;
-        console.log(split3);
         if (split3.length>0&&split3[0]!="") {
             splitterCount = 3;
         } else if (split2.length>0&&split2[0]!="") {
@@ -378,9 +408,9 @@ $(function () {
             }
         }
         keepReplacing = true;
-        if (splitterCount > 1) {
+        if (splitterCount > 0) {
             for(splitter in split1){
-                while(split1[splitter] != "NUM" &&split1[splitter] != "NUM" && userText.indexOf(split1[splitter]) != -1){
+                while(split1[splitter] != "NUM" &&split1[splitter] != "" && userText.indexOf(split1[splitter]) != -1){
                     userText = userText.replace(split1[splitter], "\n\t\t");
                 }
             }
