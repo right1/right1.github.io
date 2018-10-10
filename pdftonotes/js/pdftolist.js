@@ -106,7 +106,7 @@ $(function () {
 
     });
     $('#btnSplitters').click(function () {
-
+        console.log('Detecting splitters');
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
         var finalText = "";
