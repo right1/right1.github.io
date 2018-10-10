@@ -411,7 +411,7 @@ $(function () {
         if (splitterCount > 0) {
             for (splitter in split1) {
                 while (split1[splitter] != "NUM" && split1[splitter] != "" && userText.indexOf(split1[splitter]) != -1) {
-                    userText = userText.replace(split1[splitter], "\n\t\t");
+                    userText = userText.replace(split1[splitter], "\n\t");
                 }
             }
         }
