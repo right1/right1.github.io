@@ -1,5 +1,5 @@
 $(function () {
-    $('#pageNumberDetection').click();
+    // $('#pageNumberDetection').click();
     function showInfoBanner(){
         setTimeout(function(){
             $('#infoBanner').show(500);
