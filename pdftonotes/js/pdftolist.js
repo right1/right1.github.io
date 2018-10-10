@@ -1,5 +1,14 @@
 $(function () {
     $('#pageNumberDetection').click();
+    function showInfoBanner(){
+        setTimeout(function(){
+            $('#infoBanner').show(500);
+        },2000);
+        setTimeout(function(){
+            $('#infoBanner').hide(500);
+        },7000);
+    }
+    showInfoBanner();
     var userPDF;
     var badWords = [];
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -20,6 +29,7 @@ $(function () {
 
 
         console.log('The file "' + fileName + '" has been selected.');
+        $('#btnSplitters').click();
     });
     $('.options').hide();
     $('#btnOptions').click(function () {
@@ -44,7 +54,7 @@ $(function () {
         }, 2000);
     });
     $('#btnConvert').click(function () {
-
+        firstChars=[];
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
         var finalText = "";
@@ -86,6 +96,119 @@ $(function () {
             });
         };
 
+
+        fileReader.readAsArrayBuffer(userPDF);
+        // console.log(userText);
+        // userText=convertText(userText);
+
+        // result = userText;
+        // console.log(userText);
+
+    });
+    $('#btnSplitters').click(function () {
+
+        var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
+        var finalText_array = [];
+        var finalText = "";
+        var fileReader = new FileReader();
+        var pageStart = parseInt($('#pageStart').val());
+        var pageEnd = parseInt($('#pageEnd').val());
+        var excludeStart = parseInt($('#excludeStart').val());
+        var excludeEnd = parseInt($('#excludeEnd').val());
+        var ignoreThreshold = parseInt($('#ignoreThreshold').val());
+        if (ignoreThreshold == NaN) ignoreThreshold = 0;
+        badWords = $('#badWords').val().split(',');
+        nastyWords = $('#nastyWords').val().split(',');
+        fileReader.onload = function () {
+            var typedarray = new Uint8Array(this.result);
+
+            // var pdfjs = pdfjsLib.getDocument(typedarray)
+            pdfjsLib.getDocument(typedarray).then(function (pdf) {
+                // you can now use *pdf* here
+                if (isNaN(pageEnd) || pageEnd == 0) pageEnd = pdf.numPages;
+                if (isNaN(pageStart) || pageStart == 0) pageStart = 1;
+                if (isNaN(excludeEnd)) excludeEnd = 0;
+                if (isNaN(excludeStart)) excludeStart = 0;
+                var count = pageStart;
+                for(var i=0;i<pageStart;i++){
+                    finalText_array[i]="EMPTYPAGE";
+                }
+                for (var i = pageStart; i <= pageEnd; i++) {
+                    
+                    getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
+                        console.log(result);
+                        finalText_array[index] = result;
+                        if (finalText_array.length-1 === pageEnd && finalText_array.every(element => element !== null)) {
+                            if(finalText_array.every(element => element === "EMPTYPAGE")){
+                                alert("Couldn't detect any text in that file.");
+                            }
+                            var foundSplitters={};
+                            for(x in firstChars){
+                                if(firstChars[x].substring(0,1)==' '){
+                                    firstChars[x]=firstChars[x].substring(1,firstChars[x].length);
+                                }
+                                if(firstChars[x].substring(firstChars[x].length-1,firstChars[x].length)==' '){
+                                    firstChars[x]=firstChars[x].substring(0,firstChars[x].length-1);
+                                }
+                                if(firstChars[x].match(/[0-9]/i)){
+                                    firstChars[x]="NUM";
+                                }
+                            }
+                            for(x in firstChars){
+                                var splitterExists=false;
+                                $.each(foundSplitters,function(key,value){
+                                    if(firstChars[x]==key){
+                                        foundSplitters[key]=value+1;
+                                        splitterExists=true;
+                                    }
+                                });
+                                if(!splitterExists){
+                                    foundSplitters[firstChars[x]]=1;
+                                }
+                            }
+                            console.log(JSON.stringify(foundSplitters));
+                            while(Object.keys(foundSplitters).length>=8){
+                                var lowestVal;
+                                var lowestVal_value=Number.MAX_SAFE_INTEGER;
+                                $.each(foundSplitters,function(key,value){
+                                    if(foundSplitters[key]<lowestVal_value){
+                                        lowestVal=key;
+                                        lowestVal_value=foundSplitters[key];
+                                    }
+                                });
+                                delete foundSplitters[lowestVal];
+                            }
+                            var splitterDisplayCount=1;
+                            for(var splitterResetCount=1;splitterResetCount<=4;splitterResetCount++){
+                                $('#suggestedSplitter'+splitterResetCount).text('');
+                            }
+                            console.log(foundSplitters);
+                            while(Object.keys(foundSplitters).length>0){
+                                var highestVal;
+                                var highestVal_value=-1;
+                                $.each(foundSplitters,function(key,value){
+                                    if(foundSplitters[key]>highestVal_value){
+                                        highestVal=key;
+                                        highestVal_value=foundSplitters[key];
+                                    }
+                                });
+                                if(highestVal_value>2&&splitterDisplayCount<=4&&highestVal.indexOf(',')==-1&&highestVal.indexOf(String.fromCharCode(160))==-1&&highestVal.indexOf(String.fromCharCode(8239))==-1){
+                                    console.log(highestVal);
+                                    $('#suggestedSplitter'+splitterDisplayCount).text(highestVal);
+                                    splitterDisplayCount++;
+                                }
+                                
+                                delete foundSplitters[highestVal];
+                            }
+                        }
+
+                    });
+                }
+
+            });
+        };
+        
+
         fileReader.readAsArrayBuffer(userPDF);
         // console.log(userText);
         // userText=convertText(userText);
@@ -102,7 +225,6 @@ $(function () {
         pdf.getPage(i).then(function (page) {
             // you can now use *page* here
             page.getTextContent().then(function (textContent) {
-                console.log(textContent);
                 var ignored = false;
                 // console.log(textContent);
                 var charCount = 0;
@@ -184,6 +306,25 @@ $(function () {
         var split1 = $('#splitter1').val().split(',');
         var split2 = $('#splitter2').val().split(',');
         var split3 = $('#splitter3').val().split(',');
+        for(x in split1){
+            if(split1[x].match(/[0-9]/i)){
+                split1[x]="NUM";
+                break;
+            }
+        }
+        for(x in split2){
+            if(split2[x].match(/[0-9]/i)){
+                split2[x]="NUM";
+                break;
+            }
+        }
+        for(x in split3){
+            if(split3[x].match(/[0-9]/i)){
+                split3[x]="NUM";
+                break;
+            }
+        }
+        
         var numDelim = $('#numDelim').val();
         if (split1 == "NUM") {
             if (split2 == "NUM" || split3 == "NUM") {
