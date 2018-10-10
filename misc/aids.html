@@ -1,56 +1,68 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<button>New Joke</button>
-	<h1 id="setup">Setup</h1>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
-	<br></br>
 	
-	<h1 id="punchline">Punchline</h1>
+	<!-- <iframe class="youtube-player" id="player" type="text/html" src="http://www.youtube.com/embed/JW5meKfy3fY?wmode=opaque&autohide=1&autoplay=1&enablejsapi=1" frameborder="0">&lt;br /&gt;</iframe> -->
+	<div id="player" style="height:100vh"></div>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 <script>
 	window.onload = function () {
-	var btn = document.querySelector('button');
-	var counter=0;
-	btn.onclick=function(){
-		update();
-	}
 	setInterval(function(){
 		alert("You've been gnomed");
-	},100);
-	function update() {
-		var requestURL='https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke';
-		var request=new XMLHttpRequest();
-		request.open('GET',requestURL);
-		request.responseType='json';
-		request.send();
-		request.onload=function(){
-			var testData=request.response;
-			var j1=document.getElementById("setup");
-			var j2=document.getElementById("punchline");
-			j1.innerHTML=testData.setup;
-			j2.innerHTML=testData.punchline;
-			console.log(testData);
-		}
-
-	};
+	},200);
 
 }
 </script>
 </head>
 <body>
-<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+<script>
+		// 1. This code loads the IFrame Player API code asynchronously.
+		var tag = document.createElement('script');
+  
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+		// 2. This function creates an <iframe> (and YouTube player)
+		//    after the API code downloads.
+		var player;
+		function onYouTubeIframeAPIReady() {
+		  player = new YT.Player('player', {
+			height: '100%',
+			width: '100%',
+			playerVars: {
+					  autoplay: 1,
+					  loop: 1,
+					  controls: 0,
+					  showinfo: 0,
+					  autohide: 1,
+					  modestbranding: 1,
+					  vq: 'hd1080'},
+			videoId: '6n3pFFPSlW4',
+			events: {
+			  'onReady': onPlayerReady,
+			  'onStateChange': onPlayerStateChange
+			}
+		  });
+		  
+			
+		}
+  
+		// 3. The API will call this function when the video player is ready.
+		function onPlayerReady(event) {
+			player.setVolume(100);
+		  event.target.playVideo();
+		}
+  
+		var done = false;
+		function onPlayerStateChange(event) {
+		  
+		}
+		function stopVideo() {
+		  player.stopVideo();
+		}
+	  </script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 </html>
