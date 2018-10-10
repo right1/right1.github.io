@@ -1,5 +1,5 @@
 var userPDF;
-const BLACKLIST=['\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239)];
+const BLACKLIST=['\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠'];
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     // $('#pageNumberDetection').click();
@@ -11,6 +11,7 @@ $(function () {
             $('#infoBanner').hide(500);
         }, 7000);
     }
+    $("[name='bsswitch']").bootstrapSwitch();
     showInfoBanner();
     var badWords = [];
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -262,7 +263,7 @@ $(function () {
         var finalText = "";
 
         var addTab = false;
-
+        var headerDelim = ($('#splitter1').val() == 'BIG') ? true : false;
         pdf.getPage(i).then(function (page) {
             // you can now use *page* here
             page.getTextContent().then(function (textContent) {
