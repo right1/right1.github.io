@@ -106,7 +106,16 @@ $(function () {
 
     });
     $('#btnSplitters').click(function () {
-        console.log('Detecting splitters');
+        detectSplitters();
+        
+        // console.log(userText);
+        // userText=convertText(userText);
+
+        // result = userText;
+        // console.log(userText);
+
+    });
+    function detectSplitters(){
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
         var finalText = "";
@@ -210,13 +219,7 @@ $(function () {
         
 
         fileReader.readAsArrayBuffer(userPDF);
-        // console.log(userText);
-        // userText=convertText(userText);
-
-        // result = userText;
-        // console.log(userText);
-
-    });
+    }
     function getPageText(pdf, i, excludeStart, excludeEnd, ignore, callback) {
         var finalText = "";
 
