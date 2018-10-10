@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<button>New Joke</button>
+	<h1 id="setup">Setup</h1>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	<br></br>
+	
+	<h1 id="punchline">Punchline</h1>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<script>
+	window.onload = function () {
+	var btn = document.querySelector('button');
+	var counter=0;
+	btn.onclick=function(){
+		update();
+	}
+	setInterval(function(){
+		alert("You've been gnomed");
+	},100);
+	function update() {
+		var requestURL='https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke';
+		var request=new XMLHttpRequest();
+		request.open('GET',requestURL);
+		request.responseType='json';
+		request.send();
+		request.onload=function(){
+			var testData=request.response;
+			var j1=document.getElementById("setup");
+			var j2=document.getElementById("punchline");
+			j1.innerHTML=testData.setup;
+			j2.innerHTML=testData.punchline;
+			console.log(testData);
+		}
+
+	};
+
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
