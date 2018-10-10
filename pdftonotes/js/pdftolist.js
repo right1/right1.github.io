@@ -29,7 +29,7 @@ $(function () {
 
 
         console.log('The file "' + fileName + '" has been selected.');
-        $('#btnSplitters').click();
+        detectSplitters();
     });
     $('.options').hide();
     $('#btnOptions').click(function () {
