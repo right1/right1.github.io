@@ -1,5 +1,5 @@
 var userPDF;
-const BLACKLIST=['\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠'];
+const BLACKLIST=['\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠','"','(',')'];
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     // $('#pageNumberDetection').click();
