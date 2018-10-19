@@ -1,5 +1,5 @@
 var userPDF;
-const BLACKLIST=['\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠','"','(',')','”'];
+const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠','"','(',')','”',';','.',';'];
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     // $('#pageNumberDetection').click();
@@ -24,7 +24,7 @@ $(function () {
         var fileName = (e.target.files[0]) ? e.target.files[0].name : "Click to select file (or drag and drop)";
         userPDF = e.target.files[0];
         if (userPDF.type != "application/pdf") {
-            console.error(userPDF.name, "is not a pdf file.")
+            console.error(userPDF.name, " is not a pdf file.")
             alert(userPDF.name+ " is not a pdf file.");
             return;
         }
@@ -78,6 +78,11 @@ $(function () {
         }, 2000);
     });
     $('#btnConvert').click(function () {
+        if (!userPDF || !userPDF.type || userPDF.type != "application/pdf") {
+            console.error((userPDF&&userPDF.name)?userPDF.name + " is not a pdf file.": "No PDF file selected");
+            alert((userPDF&&userPDF.name)?userPDF.name + " is not a pdf file.": "No PDF file selected");
+            return;
+        }
         $('#loadingData').text('Result');
         $('#loadingBanner').show(100);
         firstChars = [];
