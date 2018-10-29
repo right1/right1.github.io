@@ -272,6 +272,7 @@ $(function () {
         pdf.getPage(i).then(function (page) {
             // you can now use *page* here
             page.getTextContent().then(function (textContent) {
+                var numSearch=[1];
                 var ignored = false;
                 // console.log(textContent);
                 var charCount = 0;
@@ -323,10 +324,12 @@ $(function () {
                                 addTab = false;
                             }
                             if (($('#splitter3').val() == 'NUM' || $('#splitter2').val() == 'NUM' || $('#splitter1').val() == 'NUM') && textItem.length > 3) {
-                                for (var index = 100; index > 0; index--) {
-                                    if (textItem.indexOf(index + $('#numDelim').val()) != -1 && (index + $('#numDelim').val()).length * 4 <= textItem.length) {
-                                        if (textItem.substring(0, index / 10 + 1 + $('#numDelim').val().length) !== index + $('#numDelim').val()) {
-                                            textItem = textItem.replace(index + $('#numDelim').val(), index + "PLA.'CEHOLDER" + $('#numDelim').val());
+                                for (var index = 0; index <=numSearch.length; index++) {
+                                    if (textItem.indexOf(numSearch[index] + $('#numDelim').val()) != -1 && (numSearch[index] + $('#numDelim').val()).length * 4 <= textItem.length) {
+                                        if (textItem.substring(0, numSearch[index] / 10 + 1 + $('#numDelim').val().length) !== numSearch[index] + $('#numDelim').val()) {
+                                            textItem = textItem.replace(numSearch[index] + $('#numDelim').val(), numSearch[index] + "PLA.'CEHOLDER" + $('#numDelim').val());
+                                            numSearch[index]++;
+                                            numSearch.push(1);
                                         }
 
                                     }
