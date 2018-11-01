@@ -331,6 +331,7 @@ $(function () {
                     var detectNumber = textContent.items[j].str.replace(/ /g, "");
                     var parsedInt = parseInt(detectNumber);
                     if ($('#pageNumberDetection').is(':checked') && detectNumber.indexOf('.') == -1 && parsedInt==i&&detectNumber.length < 3) {
+                        if(j==headerSemi)headerSemi++;
                         continue;
                     } else {
                         var textItem = textContent.items[j].str;
@@ -342,7 +343,7 @@ $(function () {
                             }
                         }
                         if (remove) {
-
+                            if(j==headerSemi)headerSemi++;
                         }else {
                             if (textItem == ' ') {
                                 addTab = false;
@@ -390,6 +391,7 @@ $(function () {
                                 finalText += textItem;
                             }
                         }
+                        
                     }
                     if(j==headerSemi&&quizletFormat){
                         finalText+='^^^';
