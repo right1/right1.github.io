@@ -146,6 +146,9 @@
               </button>
             </div>
             <div class="modal-body">
+              <p>IMPORTANT: This will only work on documents with highlightable text.</p>
+              <p>Quizlet Support: Use the import option, then copy paste. Under "Between term and definition" select custom and type "^^^" and for "Between cards" select custom and type ";;;"</p>
+              <p>Other information: </p>
               <p>Splitters: defines what to split by (this will be the bullet point) different splitter=different indentation.</p>
               <p>For numbered splitter (1. 2. 3. ...) type NUM or type any number as the splitter</p>
               <p>To use multiple splitters with the same indentation, separate them with a ',' in each respective box</p>
@@ -179,6 +182,14 @@
             </div>
             <div class="modal-body">
               <div class="row">
+                <div class="column"><p>Quizlet Format</p></div>
+                <div class="column" id="quizletParent"><input name="bsswitch" type="checkbox" id="quizletFormat" value="option1"></div>
+              </div>
+              <div class="row">
+                <div class="column"><label class="form-check-label" for="inlineCheckbox1">Remove page numbers</label></div>
+                <div class="column"><input name="bsswitch" type="checkbox" id="pageNumberDetection" value="option1" checked></div>
+              </div>
+              <div class="row">
                 <div class="column"><p>Num Delim:</p></div>
                 <div class="column"><input type="text" class="form-control" placeholder="Number delim" value="." id="numDelim" type="text"></div>
               </div>
@@ -186,10 +197,7 @@
                 <div class="column"><p>Ignore threshold:</p></div>
                 <div class="column"><input type="number" class="form-control" placeholder="ignore" id="ignoreThreshold" type="number" value="100"></div>
               </div>
-              <div class="row">
-                <div class="column"><label class="form-check-label" for="inlineCheckbox1">Remove page numbers</label></div>
-                <div class="column"><input name="bsswitch" type="checkbox" id="pageNumberDetection" value="option1" checked></div>
-              </div>
+              
               <div class="row">
                 <div class="column" style="width:25%"><p>Bad words</p></div>
                 <div class="column" style="width:75%"><input type="text" class="form-control" placeholder="Excludes detected phrases. (Separate with ',')" id="badWords" type="text"></div>
