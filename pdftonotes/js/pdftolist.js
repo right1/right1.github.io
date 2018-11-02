@@ -125,8 +125,7 @@ $(function () {
                 }
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
-                        finalText_array[index] = result;
-                        if(quizletFormat)finalText_array[index]+=';;;';
+                        finalText_array[index] = (quizletFormat)?result+';;;':result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             // console.log(firstChars);
 
