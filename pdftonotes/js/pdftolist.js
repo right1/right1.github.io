@@ -1,20 +1,25 @@
-var userPDF;
+//Elements to exclude from splitter detection
 const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠','"','(',')','”',';','.',';','='];
+var DEBUG=true;
 $(function () {
+    //HTML INITIAL SETUP
     $('[data-toggle="tooltip"]').tooltip();
-    // $('#pageNumberDetection').click();
-    
     $("[name='bsswitch']").bootstrapSwitch();
+    $('.options').hide();
     showInfoBanner();
+
     var badWords = [];
+    var nastyWords = [];
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
     var result_PDF;
-    var nastyWords = [];
     var suggestedSplitters=[];
     var firstChars = [];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
     var quizletFormat=false;
     var bullet='\t';
+    var userPDF;
+
+    //HTML ONCHANGE EVENTS
     $('#quizletFormat').on('switchChange.bootstrapSwitch', function (event, state) {
         quizletFormat=state;
         if(quizletFormat){
@@ -23,7 +28,6 @@ $(function () {
             bullet='\t';
         }
     }); 
-        
     $('input[type="file"]').change(function (e) {
         var fileName = (e.target.files[0]) ? e.target.files[0].name : "Click to select file (or drag and drop)";
         userPDF = e.target.files[0];
@@ -35,13 +39,12 @@ $(function () {
         $('#filename').text(fileName);
 
 
-        console.log('The file "' + fileName + '" has been selected.');
+        if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
         $('#loadingData').text('Splitters');
         $('#loadingBanner').show(100);
         firstChars = [];
         detectSplitters();
     });
-    $('.options').hide();
     $('#btnOptions').click(function () {
         if ($('.options').css('display') == 'none') {
             $('.options').show();
@@ -130,6 +133,8 @@ $(function () {
         detectSplitters();
 
     });
+
+    //FUNCTIONS
     function showInfoBanner() {
         setTimeout(function () {
             $('#infoBanner').show(500);
@@ -137,6 +142,80 @@ $(function () {
         setTimeout(function () {
             $('#infoBanner').hide(500);
         }, 7000);
+    }
+    function arrangeDetectedSplitters(foundSplitters){
+        for (x in firstChars) {
+            if (firstChars[x].substring(0, 1) == ' ') {
+                firstChars[x] = firstChars[x].substring(1, firstChars[x].length);
+            }
+            if (firstChars[x].substring(firstChars[x].length - 1, firstChars[x].length) == ' ') {
+                firstChars[x] = firstChars[x].substring(0, firstChars[x].length - 1);
+            }
+            if (firstChars[x].match(/[0-9]/i)) {
+                firstChars[x] = "NUM";
+            }
+        }
+        for (x in firstChars) {
+            var splitterExists = false;
+            $.each(foundSplitters, function (key, value) {
+                if (firstChars[x] == key) {
+                    foundSplitters[key] = value + 1;
+                    splitterExists = true;
+                }
+            });
+            if (!splitterExists) {
+                foundSplitters[firstChars[x]] = 1;
+            }
+        }
+        return foundSplitters;
+    }
+    function getBestSplitters(foundSplitters,amount){
+        while (Object.keys(foundSplitters).length >= amount) {
+            var lowestVal;
+            var lowestVal_value = Number.MAX_SAFE_INTEGER;
+            $.each(foundSplitters, function (key, value) {
+                if (foundSplitters[key] < lowestVal_value) {
+                    lowestVal = key;
+                    lowestVal_value = foundSplitters[key];
+                }
+            });
+            delete foundSplitters[lowestVal];
+        }
+        return foundSplitters;
+    }
+    function displayBestSplitters(foundSplitters,amountToDisplay,reset,resetID){
+        var splitterDisplayCount = 1;
+        //Resetting old splitters
+        if(reset){
+            for (var splitterResetCount = 1; splitterResetCount <= amountToDisplay; splitterResetCount++) {
+                $(resetID + splitterResetCount).text('');
+            }
+        }
+        while (Object.keys(foundSplitters).length > 0) {
+            var highestVal;
+            var highestVal_value = -1;
+            $.each(foundSplitters, function (key, value) {
+                if (foundSplitters[key] > highestVal_value) {
+                    highestVal = key;
+                    highestVal_value = foundSplitters[key];
+                }
+            });
+            if (highestVal_value > 2 && splitterDisplayCount <= amountToDisplay &&highestVal!="") {
+                var blacklisted=false;
+                for(var blk=0;blk<BLACKLIST.length;blk++){
+                    if(highestVal.indexOf(BLACKLIST[blk])!=-1){
+                        blacklisted=true;
+                        break;
+                    }
+                }
+                if(!blacklisted){
+                    $('#suggestedSplitter' + splitterDisplayCount).text(highestVal);
+                    splitterDisplayCount++;
+                    suggestedSplitters.push(highestVal);
+                }
+            }
+            delete foundSplitters[highestVal];
+        }
     }
     function detectSplitters() {
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
@@ -171,74 +250,10 @@ $(function () {
                                 alert("Couldn't detect any text in that file.");
                             }
                             var foundSplitters = {};
-                            for (x in firstChars) {
-                                if (firstChars[x].substring(0, 1) == ' ') {
-                                    firstChars[x] = firstChars[x].substring(1, firstChars[x].length);
-                                }
-                                if (firstChars[x].substring(firstChars[x].length - 1, firstChars[x].length) == ' ') {
-                                    firstChars[x] = firstChars[x].substring(0, firstChars[x].length - 1);
-                                }
-                                if (firstChars[x].match(/[0-9]/i)) {
-                                    firstChars[x] = "NUM";
-                                }
-                            }
-                            for (x in firstChars) {
-                                var splitterExists = false;
-                                $.each(foundSplitters, function (key, value) {
-                                    if (firstChars[x] == key) {
-                                        foundSplitters[key] = value + 1;
-                                        splitterExists = true;
-                                    }
-                                });
-                                if (!splitterExists) {
-                                    foundSplitters[firstChars[x]] = 1;
-                                }
-                            }
-                            // console.log(JSON.stringify(foundSplitters));
-                            while (Object.keys(foundSplitters).length >= 8) {
-                                var lowestVal;
-                                var lowestVal_value = Number.MAX_SAFE_INTEGER;
-                                $.each(foundSplitters, function (key, value) {
-                                    if (foundSplitters[key] < lowestVal_value) {
-                                        lowestVal = key;
-                                        lowestVal_value = foundSplitters[key];
-                                    }
-                                });
-                                delete foundSplitters[lowestVal];
-                            }
-                            var splitterDisplayCount = 1;
-                            for (var splitterResetCount = 1; splitterResetCount <= 4; splitterResetCount++) {
-                                $('#suggestedSplitter' + splitterResetCount).text('');
-                            }
+                            foundSplitters=arrangeDetectedSplitters(foundSplitters);
+                            foundSplitters=getBestSplitters(foundSplitters,8);
                             suggestedSplitters=[];
-                            while (Object.keys(foundSplitters).length > 0) {
-                                var highestVal;
-                                var highestVal_value = -1;
-                                $.each(foundSplitters, function (key, value) {
-                                    if (foundSplitters[key] > highestVal_value) {
-                                        highestVal = key;
-                                        highestVal_value = foundSplitters[key];
-                                    }
-                                });
-                                if (highestVal_value > 2 && splitterDisplayCount <= 4 &&highestVal!="") {
-                                    // console.log(highestVal);
-                                    var blacklisted=false;
-                                    for(var blk=0;blk<BLACKLIST.length;blk++){
-                                        if(highestVal.indexOf(BLACKLIST[blk])!=-1){
-                                            blacklisted=true;
-                                            break;
-                                        }
-                                    }
-                                    if(!blacklisted){
-                                        $('#suggestedSplitter' + splitterDisplayCount).text(highestVal);
-                                        splitterDisplayCount++;
-                                        suggestedSplitters.push(highestVal);
-                                    }
-                                    
-                                }
-
-                                delete foundSplitters[highestVal];
-                            }
+                            displayBestSplitters(foundSplitters,4,true,'#suggestedSplitter');
                             $('#loadingBanner').hide(250);
                         }
                     });
@@ -255,6 +270,78 @@ $(function () {
         }
         return splitters;
     }
+    function detectHeader(textContent,headerSemi){
+        var textContent_ini=textContent;
+        try{
+            var max_Height=textContent.items[0].height;
+            var max_index=0;
+            for(var i=0;i<textContent.items.length;i++){
+                if(textContent.items[i].height>max_Height){
+                    max_Height=textContent.items[i].height;
+                    max_index=i;
+                }
+            }
+            if(textContent.items[0].height=max_Height){
+                //header at beginning
+                var num=0;
+                while(textContent.items[num].height==textContent.items[0].height){
+                    num++;
+                }
+                headerSemi=num;
+            }else if(textContent.items[textContent.items.length-1].height==max_Height){
+                //header at end
+                var lastElement=textContent.items.pop();
+                textContent.items.unshift(lastElement);
+                if(DEBUG)console.log("shifted "+i);
+            }else{
+                //hope for the best
+                //(will go after first element)
+                headerSemi=0;
+            }
+        }catch(e){
+            if(DEBUG)console.log(e);
+            return{
+                "headerSemi":headerSemi,
+                "textContent":textContent_ini,
+                "error": e
+            }
+        }
+        return{
+            "headerSemi":headerSemi,
+            "textContent":textContent,
+            "error": false
+        }
+    }
+    function ignoreLoop(textContent){
+        var nastyWord=false;
+        var charCount=0;
+        for (var j = 0; j < textContent.items.length; j++) {
+            if (textContent.items[j].str.substring(0, 1).match(/[a-z]/i) || textContent.items[j].str.substring(1, 2).match(/[a-z]/i)) {
+            } else {
+                firstChars.push(textContent.items[j].str.substring(0, 2));
+            }
+            for (var k = 0; k < nastyWords.length; k++) {
+                if (nastyWords[k].length > 1 && textContent.items[j].str.indexOf(nastyWords[k]) != -1) {
+                    nastyWord = true;
+                    break;
+                }
+            }
+            charCount += textContent.items[j].str.indexOf(nastyWord) != -1;
+            charCount += textContent.items[j].str.length;
+        }
+        return {
+            "charCount" : charCount,
+            "nastyWord": nastyWord
+        }
+    }
+    function findBadWords(textItem){
+        for (var k = 0; k < badWords.length; k++) {
+            if (textItem.indexOf(badWords[k]) != -1 && badWords[k].length >= textItem.length / 2) {
+                return true;
+            }
+        }
+        return false;
+    }
     function getPageText(pdf, i, excludeStart, excludeEnd, ignore, callback) {
         var finalText = "";
         var addTab = false;
@@ -269,42 +356,17 @@ $(function () {
                 split2=splitter_detectNumbers(split2);
                 split3=splitter_detectNumbers(split3);
                 var headerSemi=-1;
-                if(textContent.items[0]&&textContent.items[0].height<=1200
-                    &&textContent.items[0].height<textContent.items[textContent.items.length-1].height
-                    &&textContent.items[textContent.items.length-1].height>=1200){
-                    var lastElement=textContent.items.pop();
-                    textContent.items.unshift(lastElement);
-                    console.log("shifted "+i);
-                }else if(textContent.items[0]&&textContent.items[0].height>=1200){
-                    //header at beginning
-                    var num=0;
-                    while(textContent.items[num].height==textContent.items[0].height){
-                        num++;
-                    }
-                    headerSemi=num;
-                }else{
-                    headerSemi=0;
-                }
+                var detectHeader_result=detectHeader(textContent,headerSemi);
+                headerSemi=detectHeader_result['headerSemi'];
+                textContent=detectHeader_result['textContent'];
                 var numSearch=[1];
                 var ignored = false;
-                // console.log(textContent);
                 var charCount = 0;
                 var nastyWord = false;
-                for (var j = 0; j < textContent.items.length; j++) {
-                    if (textContent.items[j].str.substring(0, 1).match(/[a-z]/i) || textContent.items[j].str.substring(1, 2).match(/[a-z]/i)) {
-
-                    } else {
-                        firstChars.push(textContent.items[j].str.substring(0, 2));
-                    }
-                    for (var k = 0; k < nastyWords.length; k++) {
-                        if (nastyWords[k].length > 1 && textContent.items[j].str.indexOf(nastyWords[k]) != -1) {
-                            nastyWord = true;
-                            // break;
-                        }
-                    }
-                    charCount += textContent.items[j].str.indexOf(nastyWord) != -1;
-                    charCount += textContent.items[j].str.length;
-                }
+                var ignoreLoop_result=ignoreLoop(textContent);
+                nastyWord=ignoreLoop_result['nastyWord'];
+                charCount=ignoreLoop_result['charCount'];
+                
                 if (charCount < ignore || nastyWord) {
                     ignored = true;
                 }
@@ -317,13 +379,7 @@ $(function () {
                         continue;
                     } else {
                         var textItem = textContent.items[j].str;
-                        var remove = false;
-                        for (var k = 0; k < badWords.length; k++) {
-                            if (textItem.indexOf(badWords[k]) != -1 && badWords[k].length >= textItem.length / 2) {
-                                remove = true;
-                                break;
-                            }
-                        }
+                        var remove = findBadWords(textItem);
                         if (remove) {
                             if(j==headerSemi)headerSemi++;
                         }else {
@@ -337,30 +393,11 @@ $(function () {
                                 finalText += '\t'
                                 addTab = false;
                             }
+                            
                             if ((split3.indexOf('NUM') !=-1  || split2.indexOf('NUM') !=-1 || split1.indexOf('NUM') !=-1) && textItem.length > 3) {
-                                // var inNumSearch=false;
-                                for (var index = 0; index <=numSearch.length; index++) {
-                                    if (textItem.indexOf(numSearch[index] + $('#numDelim').val()) != -1 ) {
-                                        if (true||textItem.substring(0, numSearch[index] / 10 + 1 + $('#numDelim').val().length) !== numSearch[index] + $('#numDelim').val()) {
-                                            console.log(numSearch[index]+" found in",textItem);
-                                            textItem = textItem.replace(numSearch[index] + $('#numDelim').val(), numSearch[index] + "ACTUAL;;NUM" + $('#numDelim').val());
-                                            numSearch[index]++;
-                                            // numSearch.push(1);
-                                            // inNumSearch=true;
-                                        }
-                                    }
-                                }
-                                var keepReplacing=true;
-                                while(keepReplacing){
-                                    keepReplacing=false;
-                                    for (var protectNum = 100; protectNum > 0; protectNum--) {
-                                        if (textItem.indexOf(protectNum + $('#numDelim').val()) != -1){
-                                            keepReplacing = true;
-                                            console.log(protectNum + " protected in",textItem);
-                                        } 
-                                        textItem = textItem.replace(protectNum + $('#numDelim').val(), protectNum+"PLA.'CEHOLDER" + $('#numDelim').val());
-                                    }
-                                }
+                                var findProtectNumbers_result=findProtectNumbers(textItem,numSearch);
+                                textItem=findProtectNumbers_result['text'];
+                                numSearch=findProtectNumbers_result['numSearch'];
                             }
                             if(j<=headerSemi){
                                 var useSuggestedSplitters = false;
@@ -391,6 +428,30 @@ $(function () {
                 (ignored) ? callback('EMPTYPAGE', i) : callback(finalText, i);
             })
         });
+    }
+    function findProtectNumbers(textItem,numSearch){
+        for (var index = 0; index <=numSearch.length; index++) {
+            if (textItem.indexOf(numSearch[index] + $('#numDelim').val()) != -1 ) {
+                if(DEBUG)console.log(numSearch[index]+" found in",textItem);
+                textItem = textItem.replace(numSearch[index] + $('#numDelim').val(), numSearch[index] + "ACTUAL;;NUM" + $('#numDelim').val());
+                numSearch[index]++;
+            }
+        }
+        var keepReplacing=true;
+        while(keepReplacing){
+            keepReplacing=false;
+            for (var protectNum = 100; protectNum > 0; protectNum--) {
+                if (textItem.indexOf(protectNum + $('#numDelim').val()) != -1){
+                    keepReplacing = true;
+                    if(DEBUG)console.log(protectNum + " protected in",textItem);
+                } 
+                textItem = textItem.replace(protectNum + $('#numDelim').val(), protectNum+"PLA.'CEHOLDER" + $('#numDelim').val());
+            }
+        }
+        return {
+            "text":textItem,
+            "numSearch":numSearch
+        }
     }
     function convertFromPDF(text) {
         result_PDF = convertText(text);
@@ -440,6 +501,25 @@ $(function () {
         userTextArray_joined = userTextArray_joined.replace(/PLA.'CEHOLDER/g, '');
         return userTextArray_joined;
     }
+    function splitterReplace(splitters,text,replacer,replacerRepeat){
+        for (splitter in splitters) {
+            while (splitters[splitter] != "NUM" && splitters[splitter] != "" && text.indexOf(splitters[splitter]) != -1) {
+                text = text.replace(splitters[splitter], "\n"+replacer.repeat(replacerRepeat));
+            }
+        }
+        return text;
+    }
+    function splitterReplace_Num(text,numDelim,replacer,replacerRepeat){
+        var keepReplacing=true;
+        while (keepReplacing) {
+            keepReplacing = false;
+            for (var i = 100; i > 0; i--) {
+                if (text.indexOf(i + numDelim) != -1) keepReplacing = true;
+                text = text.replace(i + numDelim, "\n"+replacer.repeat(replacerRepeat));
+            }
+        }
+        return text;
+    }
     function splitterProcess(userText,replacer, split1, split2, split3){
         split1=splitter_detectNumbers(split1);
         split2=splitter_detectNumbers(split2);
@@ -455,52 +535,29 @@ $(function () {
             splitterCount = 1;
         }
         if (splitterCount > 2) {
-            for (splitter in split3) {
-                while (split3[splitter] != "NUM" && split3[splitter] != "" && userText.indexOf(split3[splitter]) != -1) {
-                    userText = userText.replace(split3[splitter], "\n"+replacer+replacer+replacer);
-                }
-            }
+            userText=splitterReplace(split3,userText,replacer,3);
         }
-        var keepReplacing = true;
-        while (splitterCount > 2 && split3.indexOf("NUM") != -1 && keepReplacing) {
-            keepReplacing = false;
-            for (var i = 100; i > 0; i--) {
-                if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
-                userText = userText.replace(i + numDelim, "\n"+replacer+replacer+replacer);
-            }
+        if (splitterCount > 2 && split3.indexOf("NUM") != -1) {
+            userText=splitterReplace_Num(userText,numDelim,replacer,3);
         }
-        keepReplacing = true;
+
         if (splitterCount > 1) {
-            for (splitter in split2) {
-                while (split2[splitter] != "NUM" && split2[splitter] != "" && userText.indexOf(split2[splitter]) != -1) {
-                    userText = userText.replace(split2[splitter], "\n"+replacer+replacer);
-                }
-            }
+            userText=splitterReplace(split2,userText,replacer,2);
         }
-        while (splitterCount > 1 && split2.indexOf("NUM") != -1 && keepReplacing) {
-            keepReplacing = false;
-            for (var i = 100; i > 0; i--) {
-                if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
-                userText = userText.replace(i + numDelim, "\n"+replacer+replacer);
-            }
+        if (splitterCount > 1 && split2.indexOf("NUM") != -1) {
+            userText=splitterReplace_Num(userText,numDelim,replacer,2);
         }
-        keepReplacing = true;
+
         if (splitterCount > 0) {
-            for (splitter in split1) {
-                while (split1[splitter] != "NUM" && split1[splitter] != "" && userText.indexOf(split1[splitter]) != -1) {
-                    userText = userText.replace(split1[splitter], "\n"+replacer);
-                }
-            }
+            userText=splitterReplace(split1,userText,replacer,1);
         }
-        while (splitterCount > 0 && split1.indexOf("NUM") != -1 && keepReplacing) {
-            keepReplacing = false;
-            for (var i = 100; i > 0; i--) {
-                if (userText.indexOf(i + numDelim) != -1) keepReplacing = true;
-                userText = userText.replace(i + numDelim, "\n"+replacer);
-            }
+        if (splitterCount > 0 && split1.indexOf("NUM") != -1) {
+            userText=splitterReplace_Num(userText,numDelim,replacer,1);
         }
         return userText;
     }
+    
+    //drag and drop
     var lastTarget = null;
 
     function isFile(evt) {
@@ -549,7 +606,7 @@ $(function () {
 
             $('#filename').text(fileName);
 
-            console.log('The file "' + fileName + '" has been selected.');
+            if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
             $('#loadingData').text('Splitters');
             $('#loadingBanner').show(100);
             firstChars = [];
@@ -557,6 +614,4 @@ $(function () {
         }
     });
 });
-/* lastTarget is set first on dragenter, then
-         compared with during dragleave. */
 
