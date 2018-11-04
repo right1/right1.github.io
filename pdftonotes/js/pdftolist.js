@@ -275,21 +275,34 @@ $(function () {
 
         fileReader.readAsArrayBuffer(userPDF);
     }
+    function splitter_detectNumbers(splitters){
+        for (x in splitters) {
+            if (splitters[x].match(/[0-9]/i)) {
+                splitters[x] = "NUM";
+            }
+        }
+        return splitters;
+    }
     function getPageText(pdf, i, excludeStart, excludeEnd, ignore, callback) {
         var finalText = "";
         
         var addTab = false;
-        var headerDelim = ($('#splitter1').val() == 'BIG') ? true : false;
+        var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         pdf.getPage(i).then(function (page) {
             // you can now use *page* here
             page.getTextContent().then(function (textContent) {
+                var split1 = $('#splitter1').val().split(',');
+                var split2 = $('#splitter2').val().split(',');
+                var split3 = $('#splitter3').val().split(',');
+                split1=splitter_detectNumbers(split1);
+                split2=splitter_detectNumbers(split2);
+                split3=splitter_detectNumbers(split3);
                 var headerSemi=-1;
-                if(textContent.items[0].height<=1200&&textContent.items[0].height<textContent.items[textContent.items.length-1].height&&textContent.items[textContent.items.length-1].height>=1200){
+                if(textContent.items[0]&&textContent.items[0].height<=1200&&textContent.items[0].height<textContent.items[textContent.items.length-1].height&&textContent.items[textContent.items.length-1].height>=1200){
                     var lastElement=textContent.items.pop();
                     textContent.items.unshift(lastElement);
                     console.log("shifted "+i);
-                }
-                if(textContent.items[0].height>=1200){
+                }else if(textContent.items[0]&&textContent.items[0].height>=1200){
                     //header at beginning
                     var num=0;
                     while(textContent.items[num].height==textContent.items[0].height){
@@ -354,24 +367,39 @@ $(function () {
                                 finalText += '\t'
                                 addTab = false;
                             }
-                            if (($('#splitter3').val() == 'NUM' || $('#splitter2').val() == 'NUM' || $('#splitter1').val() == 'NUM') && textItem.length > 3) {
+                            if ((split3.indexOf('NUM') !=-1  || split2.indexOf('NUM') !=-1 || split1.indexOf('NUM') !=-1) && textItem.length > 3) {
+                                // var inNumSearch=false;
                                 for (var index = 0; index <=numSearch.length; index++) {
-                                    if (textItem.indexOf(numSearch[index] + $('#numDelim').val()) != -1 && (numSearch[index] + $('#numDelim').val()).length * 4 <= textItem.length) {
-                                        if (textItem.substring(0, numSearch[index] / 10 + 1 + $('#numDelim').val().length) !== numSearch[index] + $('#numDelim').val()) {
-                                            textItem = textItem.replace(numSearch[index] + $('#numDelim').val(), numSearch[index] + "PLA.'CEHOLDER" + $('#numDelim').val());
+                                    if (textItem.indexOf(numSearch[index] + $('#numDelim').val()) != -1 ) {
+                                        if (true||textItem.substring(0, numSearch[index] / 10 + 1 + $('#numDelim').val().length) !== numSearch[index] + $('#numDelim').val()) {
+                                            console.log(numSearch[index]+" found in",textItem);
+                                            textItem = textItem.replace(numSearch[index] + $('#numDelim').val(), numSearch[index] + "ACTUAL;;NUM" + $('#numDelim').val());
+                                            
                                             numSearch[index]++;
-                                            numSearch.push(1);
+                                            // numSearch.push(1);
+                                            // inNumSearch=true;
                                         }
 
                                     }
                                 }
+                                
+                                var keepReplacing=true;
+                                while(keepReplacing){
+                                    keepReplacing=false;
+                                    for (var protectNum = 100; protectNum > 0; protectNum--) {
+                                        if (textItem.indexOf(protectNum + $('#numDelim').val()) != -1){
+                                            keepReplacing = true;
+                                            console.log(protectNum + " protected in",textItem);
+                                        } 
+                                        textItem = textItem.replace(protectNum + $('#numDelim').val(), protectNum+"PLA.'CEHOLDER" + $('#numDelim').val());
+                                    }
+                                }
+                                    
+                                
                             }
                             if(j<=headerSemi){
-                                console.log('123123');
                                 var useSuggestedSplitters = false;
-                                var split1 = $('#splitter1').val().split(',');
-                                var split2 = $('#splitter2').val().split(',');
-                                var split3 = $('#splitter3').val().split(',');
+                                
                                 if ((split1.length == 0 || (split1.length == 1 && split1[0] == '')) && (split2.length == 0 || (split2.length == 1 && split2[0] == '')) && (split3.length == 0 || (split3.length == 1 && split3[0] == ''))) {
                                     useSuggestedSplitters = true;
                                     split1 = [];
@@ -397,6 +425,7 @@ $(function () {
                     }
 
                 }
+                finalText = finalText.replace(/ACTUAL;;NUM/g, '');
                 (ignored) ? callback('EMPTYPAGE', i) : callback(finalText, i);
                 // console.log(finalText);
             })
@@ -454,36 +483,11 @@ $(function () {
         return userTextArray_joined;
     }
     function splitterProcess(userText,replacer, split1, split2, split3){
-        console.log(userText);
-        for (x in split1) {
-            if (split1[x].match(/[0-9]/i)) {
-                split1[x] = "NUM";
-                break;
-            }
-        }
-        for (x in split2) {
-            if (split2[x].match(/[0-9]/i)) {
-                split2[x] = "NUM";
-                break;
-            }
-        }
-        for (x in split3) {
-            if (split3[x].match(/[0-9]/i)) {
-                split3[x] = "NUM";
-                break;
-            }
-        }
+        split1=splitter_detectNumbers(split1);
+        split2=splitter_detectNumbers(split2);
+        split3=splitter_detectNumbers(split3);
 
         var numDelim = $('#numDelim').val();
-        if (split1 == "NUM") {
-            if (split2 == "NUM" || split3 == "NUM") {
-                alert("Only use one splitter for Numbered input");
-                return;
-            }
-        } else if (split2 == "NUM" && split3 == "NUM") {
-            alert("Only use one splitter for Numbered input");
-            return;
-        }
         var splitterCount = 0;
         if (split3.length > 0 && split3[0] != "") {
             splitterCount = 3;
@@ -537,7 +541,6 @@ $(function () {
                 userText = userText.replace(i + numDelim, "\n"+replacer);
             }
         }
-        console.log(userText);
         return userText;
     }
     var lastTarget = null;
