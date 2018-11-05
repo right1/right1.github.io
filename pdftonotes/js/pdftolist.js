@@ -272,6 +272,7 @@ $(function () {
     }
     function detectHeader(textContent,headerSemi){
         var textContent_ini=textContent;
+        if(headerSemi==-1)headerSemi=0;
         try{
             var max_Height=textContent.items[0].height;
             var max_index=0;
@@ -281,10 +282,11 @@ $(function () {
                     max_index=i;
                 }
             }
-            if(textContent.items[0].height=max_Height){
+            if(textContent.items[headerSemi].height==max_Height){
                 //header at beginning
-                var num=0;
-                while(textContent.items[num].height==textContent.items[0].height){
+                
+                var num=headerSemi;
+                while(textContent.items[num].height==textContent.items[headerSemi].height){
                     num++;
                 }
                 headerSemi=num;
@@ -296,7 +298,24 @@ $(function () {
             }else{
                 //hope for the best
                 //(will go after first element)
-                headerSemi=0;
+                // headerSemi=0;
+            }
+            //If its bad word
+            var skipOver=findBadWords(textContent.items[headerSemi].str,false);
+            if(DEBUG&&skipOver)console.log("found bad word");
+            var detectNumber = textContent.items[headerSemi].str.replace(/ /g, "");
+            var parsedInt = parseInt(detectNumber);
+            for(var i=0;i<100;i++){
+                if ($('#pageNumberDetection').is(':checked') && detectNumber.indexOf('.') == -1 && parsedInt==i&&detectNumber.length < 3) {
+                    skipOver=true;
+                    if(DEBUG)console.log("found page number");
+                    break
+                }
+            }
+            
+            if(skipOver&&headerSemi<textContent.items.length-1){
+                headerSemi++;
+                return detectHeader(textContent,headerSemi);
             }
         }catch(e){
             if(DEBUG)console.log(e);
@@ -306,6 +325,12 @@ $(function () {
                 "error": e
             }
         }
+        if(DEBUG)console.log({
+            "headerSemi":headerSemi,
+            "textContent":textContent,
+            "error": false
+        });
+        
         return{
             "headerSemi":headerSemi,
             "textContent":textContent,
@@ -334,10 +359,11 @@ $(function () {
             "nastyWord": nastyWord
         }
     }
-    function findBadWords(textItem){
+    function findBadWords(textItem,checkLength){
+        var chk=(checkLength)?checkLength:true;
         for (var k = 0; k < badWords.length; k++) {
-            if (textItem.indexOf(badWords[k]) != -1 && badWords[k].length >= textItem.length / 2) {
-                return true;
+            if (textItem.indexOf(badWords[k]) != -1 && (badWords[k].length >= textItem.length / 2 || !chk)) {
+                return true&&badWords[0]!=="";;
             }
         }
         return false;
