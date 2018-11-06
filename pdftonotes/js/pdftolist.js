@@ -363,7 +363,7 @@ $(function () {
         var chk=(checkLength)?checkLength:true;
         for (var k = 0; k < badWords.length; k++) {
             if (textItem.indexOf(badWords[k]) != -1 && (badWords[k].length >= textItem.length / 2 || !chk)) {
-                return true&&badWords[0]!=="";;
+                return badWords[0]!=="";;
             }
         }
         return false;
