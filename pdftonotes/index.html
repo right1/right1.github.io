@@ -174,6 +174,11 @@
                 <div class="column" id="quizletParent"><input name="bsswitch" type="checkbox" id="quizletFormat" value="option1"></div>
               </div>
               <div class="row">
+                <div class="column"><span data-toggle="tooltip" data-placement="right" title="Trims words that aren't necessary (the, and, etc.)">
+                  Trim Unnecessary Words<div style="display:inline-block;width:3%"></div></span></div>
+                <div class="column"><input name="bsswitch" type="checkbox" id="trimExtra" value="option1"></div>
+              </div>
+              <div class="row">
                 <div class="column"><span data-toggle="tooltip" data-placement="right" title="Automatically tries to remove page numbers">
                   Remove page numbers<div style="display:inline-block;width:3%"></div></span></div>
                 <div class="column"><input name="bsswitch" type="checkbox" id="pageNumberDetection" value="option1" checked></div>
@@ -192,15 +197,15 @@
               </div>
 
               <div class="row">
-                <div class="column" style="width:25%"><span data-toggle="tooltip" data-placement="right" title="Excludes detected phrases. (Separate with ',') Important: no space after comma">
+                <div class="column" style="width:25%"><span data-toggle="tooltip" data-placement="right" title="Excludes detected phrases. (Separate with ',')">
                   Bad Words<div style="display:inline-block;width:3%"></div></span></div>
-                <div class="column" style="width:75%"><input type="text" class="form-control" placeholder="Separate with ',' Important: no space after comma"
+                <div class="column" style="width:75%"><input type="text" class="form-control" placeholder="Separate with ','"
                     id="badWords" type="text"></div>
               </div>
               <div class="row">
-                <div class="column" style="width:25%"><span data-toggle="tooltip" data-placement="right" title="Excludes detected pages/ slides. (Separate with ',') Important: no space after comma">
+                <div class="column" style="width:25%"><span data-toggle="tooltip" data-placement="right" title="Excludes detected pages/ slides. (Separate with ',')">
                   Nasty Words<div style="display:inline-block;width:3%"></div></span></div>
-                <div class="column" style="width:75%"><input type="text" class="form-control" placeholder="Separate with ',' Important: no space after comma"
+                <div class="column" style="width:75%"><input type="text" class="form-control" placeholder="Separate with ','"
                     id="nastyWords" type="text"></div>
               </div>
               <div class="row">

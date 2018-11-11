@@ -1,5 +1,19 @@
 //Elements to exclude from splitter detection
 const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠','"','(',')','”',';','.',';','='];
+//Extra words to trim
+const EXTRAWORDS={
+    'This is the ': '',
+    'this is the ': '',
+    'as well': '',
+    ' and ': ', ',
+    'where the': ',',
+    'Where the': '',
+    'decided to': '→',
+    'Decided to': '→',
+    ' the ': ' ',
+    'The ': '',
+
+}
 var DEBUG=true;
 $(function () {
     //HTML INITIAL SETUP
@@ -18,15 +32,20 @@ $(function () {
     var quizletFormat=false;
     var bullet='\t';
     var userPDF;
-
+    var trimExtra=true;
     //HTML ONCHANGE EVENTS
     $('#quizletFormat').on('switchChange.bootstrapSwitch', function (event, state) {
         quizletFormat=state;
+        $('#trimExtra').bootstrapSwitch('state',state);
         if(quizletFormat){
+            
             bullet='-';
         }else{
             bullet='\t';
         }
+    }); 
+    $('#trimExtra').on('switchChange.bootstrapSwitch', function (event, state) {
+        trimExtra=state;
     }); 
     $('input[type="file"]').change(function (e) {
         var fileName = (e.target.files[0]) ? e.target.files[0].name : "Click to select file (or drag and drop)";
@@ -102,8 +121,8 @@ $(function () {
         var excludeEnd = parseInt($('#excludeEnd').val());
         var ignoreThreshold = parseInt($('#ignoreThreshold').val());
         if (ignoreThreshold == NaN) ignoreThreshold = 0;
-        badWords = $('#badWords').val().split(',');
-        nastyWords = $('#nastyWords').val().split(',');
+        badWords = trimWhitespace($('#badWords').val().split(','));
+        nastyWords = trimWhitespace($('#nastyWords').val().split(','));
         fileReader.onload = function () {
             var typedarray = new Uint8Array(this.result);
             pdfjsLib.getDocument(typedarray).then(function (pdf) {
@@ -118,6 +137,7 @@ $(function () {
                 }
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
+                        result=(quizletFormat&&trimExtra)?trimExtraWords(result):result;
                         finalText_array[index] = (quizletFormat)?result+';;;':result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
@@ -142,6 +162,33 @@ $(function () {
         setTimeout(function () {
             $('#infoBanner').hide(500);
         }, 7000);
+    }
+    function trimExtraWords(text){
+        var keepReplacing=true;
+        while(keepReplacing){
+            keepReplacing=false;
+            $.each(EXTRAWORDS,function(key,value){
+                if(text.indexOf(key)!=-1){
+                    keepReplacing=true;
+                    text=text.replace(key,value);
+                    if(DEBUG)console.log([key,value]);
+                }
+            })
+        }
+        return text;
+    }
+    function trimWhitespace(textArray){
+        try{
+            for(x in textArray){
+                textArray[x]=textArray[x].trim();
+            }
+        }catch(e){
+            console.log(e);
+            alert("String trim failed, error: "+e);
+            return textArray;
+        }
+        
+        return textArray;
     }
     function arrangeDetectedSplitters(foundSplitters){
         for (x in firstChars) {
@@ -228,8 +275,8 @@ $(function () {
         var excludeEnd = parseInt($('#excludeEnd').val());
         var ignoreThreshold = parseInt($('#ignoreThreshold').val());
         if (ignoreThreshold == NaN) ignoreThreshold = 0;
-        badWords = $('#badWords').val().split(',');
-        nastyWords = $('#nastyWords').val().split(',');
+        badWords = trimWhitespace($('#badWords').val().split(','));
+        nastyWords = trimWhitespace($('#nastyWords').val().split(','));
         fileReader.onload = function () {
             var typedarray = new Uint8Array(this.result);
             pdfjsLib.getDocument(typedarray).then(function (pdf) {
@@ -325,11 +372,11 @@ $(function () {
                 "error": e
             }
         }
-        if(DEBUG)console.log({
-            "headerSemi":headerSemi,
-            "textContent":textContent,
-            "error": false
-        });
+        // if(DEBUG)console.log({
+        //     "headerSemi":headerSemi,
+        //     "textContent":textContent,
+        //     "error": false
+        // });
         
         return{
             "headerSemi":headerSemi,
@@ -375,9 +422,9 @@ $(function () {
         pdf.getPage(i).then(function (page) {
             // you can now use *page* here
             page.getTextContent().then(function (textContent) {
-                var split1 = $('#splitter1').val().split(',');
-                var split2 = $('#splitter2').val().split(',');
-                var split3 = $('#splitter3').val().split(',');
+                var split1 = trimWhitespace($('#splitter1').val().split(','));
+                var split2 = trimWhitespace($('#splitter2').val().split(','));
+                var split3 = trimWhitespace($('#splitter3').val().split(','));
                 split1=splitter_detectNumbers(split1);
                 split2=splitter_detectNumbers(split2);
                 split3=splitter_detectNumbers(split3);
@@ -485,11 +532,10 @@ $(function () {
         $('#result').text(result_PDF);
     }
     function convertText(userText) {
-        var headerDelim = ($('#splitter1').val() == 'BIG') ? true : false;
         var useSuggestedSplitters = false;
-        var split1 = $('#splitter1').val().split(',');
-        var split2 = $('#splitter2').val().split(',');
-        var split3 = $('#splitter3').val().split(',');
+        var split1 = trimWhitespace($('#splitter1').val().split(','));
+        var split2 = trimWhitespace($('#splitter2').val().split(','));
+        var split3 = trimWhitespace($('#splitter3').val().split(','));
         if ((split1.length == 0 || (split1.length == 1 && split1[0] == '')) && (split2.length == 0 || (split2.length == 1 && split2[0] == '')) && (split3.length == 0 || (split3.length == 1 && split3[0] == ''))) {
             useSuggestedSplitters = true;
             setTimeout(function () {
