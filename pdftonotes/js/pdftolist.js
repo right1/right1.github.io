@@ -33,6 +33,8 @@ $(function () {
     var bullet='\t';
     var userPDF;
     var trimExtra=true;
+    var quizletHeader='^^^';
+    var quizletEndPage=';;;';
     //HTML ONCHANGE EVENTS
     $('#quizletFormat').on('switchChange.bootstrapSwitch', function (event, state) {
         quizletFormat=state;
@@ -138,7 +140,7 @@ $(function () {
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
                         result=(quizletFormat&&trimExtra)?trimExtraWords(result):result;
-                        finalText_array[index] = (quizletFormat)?result+';;;':result;
+                        finalText_array[index] = (quizletFormat)?result+quizletEndPage:result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
                         }
@@ -494,7 +496,7 @@ $(function () {
                         }
                     }
                     if(j==headerSemi&&quizletFormat){
-                        finalText+='^^^';
+                        finalText+=quizletHeader;
                     }
                 }
                 finalText = finalText.replace(/ACTUAL;;NUM/g, '');
