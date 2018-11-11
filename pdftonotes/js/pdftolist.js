@@ -105,11 +105,25 @@ $(function () {
         }, 2000);
     });
     $('#btnConvert').click(function () {
+        startConversion();
+    });
+    $('#btnSplitters').click(function () {
+        detectSplitters();
+    });
+    $('#convertQuizlet').click(function(){
+        $('#trimExtra').bootstrapSwitch('state',true);
+        $('#quizletFormat').bootstrapSwitch('state',true);
+        startConversion();
+    });
+    //FUNCTIONS
+    function startConversion(){
         if (!userPDF || !userPDF.type || userPDF.type != "application/pdf") {
             console.error((userPDF&&userPDF.name)?userPDF.name + " is not a pdf file.": "No PDF file selected");
             alert((userPDF&&userPDF.name)?userPDF.name + " is not a pdf file.": "No PDF file selected");
             return;
         }
+        hideQuizletBtn();
+        hideHelpBtn();
         $('#loadingData').text('Result');
         $('#loadingBanner').show(100);
         firstChars = [];
@@ -149,14 +163,7 @@ $(function () {
             });
         };
         fileReader.readAsArrayBuffer(userPDF);
-
-    });
-    $('#btnSplitters').click(function () {
-        detectSplitters();
-
-    });
-
-    //FUNCTIONS
+    }
     function showInfoBanner() {
         setTimeout(function () {
             $('#infoBanner').show(500);
@@ -164,6 +171,26 @@ $(function () {
         setTimeout(function () {
             $('#infoBanner').hide(500);
         }, 7000);
+    }
+    function showQuizletBtn(){
+        setTimeout(function () {
+            $('#quizletInfoBtn').show(500);
+        }, 100);
+    }
+    function showHelpBtn(){
+        setTimeout(function () {
+            $('.help').show(500);
+        }, 100);
+    }
+    function hideQuizletBtn(){
+        setTimeout(function () {
+            $('#quizletInfoBtn').hide(500);
+        }, 100);
+    }
+    function hideHelpBtn(){
+        setTimeout(function () {
+            $('.help').hide(500);
+        }, 100);
     }
     function trimExtraWords(text){
         var keepReplacing=true;
@@ -189,7 +216,6 @@ $(function () {
             alert("String trim failed, error: "+e);
             return textArray;
         }
-        
         return textArray;
     }
     function arrangeDetectedSplitters(foundSplitters){
@@ -417,11 +443,11 @@ $(function () {
         }
         return false;
     }
-    function getPageText(pdf, i, excludeStart, excludeEnd, ignore, callback) {
+    function getPageText(pdf, pageNumber, excludeStart, excludeEnd, ignore, callback) {
         var finalText = "";
         var addTab = false;
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
-        pdf.getPage(i).then(function (page) {
+        pdf.getPage(pageNumber).then(function (page) {
             // you can now use *page* here
             page.getTextContent().then(function (textContent) {
                 var split1 = trimWhitespace($('#splitter1').val().split(','));
@@ -449,7 +475,7 @@ $(function () {
                 for (var j = excludeStart; j < textContent.items.length - excludeEnd; j++) {
                     var detectNumber = textContent.items[j].str.replace(/ /g, "");
                     var parsedInt = parseInt(detectNumber);
-                    if ($('#pageNumberDetection').is(':checked') && detectNumber.indexOf('.') == -1 && parsedInt==i&&detectNumber.length < 3) {
+                    if ($('#pageNumberDetection').is(':checked') && detectNumber.indexOf('.') == -1 && parsedInt==pageNumber&&detectNumber.length < 3) {
                         if(j==headerSemi)headerSemi++;
                         continue;
                     } else {
@@ -500,7 +526,7 @@ $(function () {
                     }
                 }
                 finalText = finalText.replace(/ACTUAL;;NUM/g, '');
-                (ignored) ? callback('EMPTYPAGE', i) : callback(finalText, i);
+                (ignored) ? callback('EMPTYPAGE', pageNumber) : callback(finalText, pageNumber);
             })
         });
     }
@@ -532,6 +558,7 @@ $(function () {
         result_PDF = convertText(text);
         $('#loadingBanner').hide(250);
         $('#result').text(result_PDF);
+        (quizletFormat)?showQuizletBtn():showHelpBtn();
     }
     function convertText(userText) {
         var useSuggestedSplitters = false;

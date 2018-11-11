@@ -111,17 +111,70 @@
       </div>
 
 
-      <br></br>
-      <div class="options" style="display:none">
 
-      </div>
-      <br></br>
+      <div style="display:inline-block;height:5vh"></div>
 
-      <div style="display:inline-block;width:10vw"></div>
-
+      <label class="btn btn-info" style="display:none" id="quizletInfoBtn" data-toggle="modal" data-target="#quizletInfo">
+        How to use?
+      </label>
+      <label class="btn btn-info help" style="display:none" id="helpBtn" data-toggle="modal" data-target="#help">
+        How to use?
+      </label>
+      <label class="btn btn-dark help" style="display:none;background-color:darkblue" id="convertQuizlet">
+        Convert in Quizlet Format
+      </label>
       <hr>
       </hr>
       <pre id="result">Result will go here</pre>
+
+      <!--MODALS -->
+      <div class="modal" id="quizletInfo" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">How to use (Quizlet)</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>1. Use the 'copy to clipboard' button</p>
+              <p>2. Go<a href="https://quizlet.com/create-set"> here</a></p>
+              <p>3. Click Import from Word, Excel, Google Docs, etc.</p>
+              <p>4. Use custom for both options, option 1 (between term and definition): type "^^^", option 2 (between cards): type ";;;"</p>
+              <p>5. Paste into the 'Import your data' Box</p>
+              <p>To set parameters to include/exclude elements (headers, footers, specific words, etc.), be sure to explore the options and info menus</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal" id="help" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">How to use (paste into Docs/Word)</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>1. Use the 'copy to clipboard' button</p>
+              <p>2. Paste into an empty file</p>
+              <p>3. Select (highlight) the content you just pasted (Ctrl+A for an empty file)</p>
+              <p>4. Enable the list formatting option<img src="https://puu.sh/BHK17/ffefb78022.png" alt="Google docs pic"></p>
+              <p>To set parameters to include/exclude elements (headers, footers, specific words, etc.), be sure to explore the options and info menus</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
       <div class="modal" id="info" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -149,7 +202,7 @@
               <p>Nasty words: slides that I didn't want in my notes (iClicker)</p>
               <p>ignoreThreshold: slides with just pictures</p>
               <p>Excluding elements: If the header and footer are consistently in the first or last few elements of the page</p>
-              <p>Made by Viknesh Alagappan, last updated 11/4/18</p>
+              <a href="https://github.com/right1/right1.github.io/tree/master/pdftonotes">Github page</a>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -209,18 +262,6 @@
                     id="nastyWords" type="text"></div>
               </div>
               <div class="row">
-                <div class="column"><span data-toggle="tooltip" data-placement="right" title="Experiment with this if there's an annoying header/footer on each page">
-                  Elements to exclude at beginning of page:<div style="display:inline-block;width:3%"></div></span></div>
-                <div class="column"><input type="number" class="form-control" placeholder="Exclude at beginning of page"
-                    id="excludeStart" type="number" value="0"></div>
-              </div>
-              <div class="row">
-                <div class="column"><span data-toggle="tooltip" data-placement="right" title="Experiment with this if there's an annoying header/footer on each page">
-                  Elements to exclude at end of page:<div style="display:inline-block;width:3%"></div></span></div>
-                <div class="column"><input type="number" class="form-control" placeholder="Exclude at end of page" id="excludeEnd"
-                    type="number" value="0"></div>
-              </div>
-              <div class="row">
                 <div class="column"><span data-toggle="tooltip" data-placement="right" title="Page to start at">Page start:<div
                       style="display:inline-block;width:3%"></div></span></div>
                 <div class="column"><input type="number" class="form-control" placeholder="page start" id="pageStart" type="number"
@@ -231,6 +272,18 @@
                       style="display:inline-block;width:3%"></div></span></div>
                 <div class="column"><input type="number" class="form-control" placeholder="page end" id="pageEnd" type="number"
                     value="0"></div>
+              </div>
+              <div class="row">
+                <div class="column"><span data-toggle="tooltip" data-placement="right" title="Experiment with this if there's an annoying header/footer on each page">
+                  Elements to exclude at beginning of page:<div style="display:inline-block;width:3%"></div></span></div>
+                <div class="column"><input type="number" class="form-control" placeholder="Exclude at beginning of page"
+                    id="excludeStart" type="number" value="0"></div>
+              </div>
+              <div class="row">
+                <div class="column"><span data-toggle="tooltip" data-placement="right" title="Experiment with this if there's an annoying header/footer on each page">
+                  Elements to exclude at end of page:<div style="display:inline-block;width:3%"></div></span></div>
+                <div class="column"><input type="number" class="form-control" placeholder="Exclude at end of page" id="excludeEnd"
+                    type="number" value="0"></div>
               </div>
               <div class="row">
                 <h6>EXPERIMENTAL</h6>
