@@ -1,5 +1,6 @@
 //Elements to exclude from splitter detection
-const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),':','≠','"','(',')','”',';','.',';','='];
+const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),
+':','≠','"','(',')','”',';','.',';','=','Δ','ε','δ','α','x','β','π','ρ','φ'];
 //Extra words to trim
 const EXTRAWORDS={
     'This is the ': '',
@@ -153,7 +154,7 @@ $(function () {
                 }
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
-                        result=(quizletFormat&&trimExtra)?trimExtraWords(result):result;
+                        result=(trimExtra)?trimExtraWords(result):result;
                         finalText_array[index] = (quizletFormat)?result+quizletEndPage:result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
@@ -228,6 +229,12 @@ $(function () {
             }
             if (firstChars[x].match(/[0-9]/i)) {
                 firstChars[x] = "NUM";
+            }
+            if (firstChars[x].match(/[a-z]/i)) {
+                firstChars[x] = "";
+            }
+            if (firstChars[x].match(/[A-Z]/i)) {
+                firstChars[x] = "";
             }
         }
         for (x in firstChars) {
@@ -438,7 +445,7 @@ $(function () {
         var chk=(checkLength)?checkLength:true;
         for (var k = 0; k < badWords.length; k++) {
             if (textItem.indexOf(badWords[k]) != -1 && (badWords[k].length >= textItem.length / 2 || !chk)) {
-                return badWords[0]!=="";;
+                return badWords[0]!=="";
             }
         }
         return false;
@@ -448,7 +455,6 @@ $(function () {
         var addTab = false;
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         pdf.getPage(pageNumber).then(function (page) {
-            // you can now use *page* here
             page.getTextContent().then(function (textContent) {
                 var split1 = trimWhitespace($('#splitter1').val().split(','));
                 var split2 = trimWhitespace($('#splitter2').val().split(','));
