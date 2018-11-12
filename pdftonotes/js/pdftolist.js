@@ -1,6 +1,6 @@
 //Elements to exclude from splitter detection
 const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),
-':','≠','"','(',')','”',';','.',';','=','Δ','ε','δ','α','x','β','π','ρ','φ'];
+':','≠','"','(',')','”',';','.',';','=','Δ','ε','δ','α','x','β','π','ρ','φ',' ','μ'];
 //Extra words to trim
 const EXTRAWORDS={
     'This is the ': '',
@@ -36,6 +36,7 @@ $(function () {
     var trimExtra=true;
     var quizletHeader='^^^';
     var quizletEndPage=';;;';
+    var detectedHeaders={};
     //HTML ONCHANGE EVENTS
     $('#quizletFormat').on('switchChange.bootstrapSwitch', function (event, state) {
         quizletFormat=state;
@@ -64,7 +65,7 @@ $(function () {
         if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
         $('#loadingData').text('Splitters');
         $('#loadingBanner').show(100);
-        firstChars = [];
+        clearElements();
         detectSplitters();
     });
     $('#btnOptions').click(function () {
@@ -127,7 +128,7 @@ $(function () {
         hideHelpBtn();
         $('#loadingData').text('Result');
         $('#loadingBanner').show(100);
-        firstChars = [];
+        clearElements();
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
         var finalText = "";
@@ -156,9 +157,21 @@ $(function () {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
                         result=(trimExtra)?trimExtraWords(result):result;
                         finalText_array[index] = (quizletFormat)?result+quizletEndPage:result;
+                        var actuallyFull=true;
+                        
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
+                            for(var j=pageStart;j<finalText_array.length;j++){
+                                if(finalText_array[j]==null){
+                                    actuallyFull=false;
+                                    break;
+                                }
+                            }
+                        }
+                        if(actuallyFull){
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
                         }
+                            
+                        
                     });
                 }
             });
@@ -201,7 +214,7 @@ $(function () {
                 if(text.indexOf(key)!=-1){
                     keepReplacing=true;
                     text=text.replace(key,value);
-                    if(DEBUG)console.log([key,value]);
+                    if(DEBUG&&false)console.log([key,value]);
                 }
             })
         }
@@ -321,28 +334,66 @@ $(function () {
                 if (isNaN(excludeEnd)) excludeEnd = 0;
                 if (isNaN(excludeStart)) excludeStart = 0;
                 var count = pageStart;
-                for (var i = 0; i < pageStart; i++) {
-                    finalText_array[i] = "EMPTYPAGE";
-                }
+                // for (var i = 0; i < pageStart; i++) {
+                //     finalText_array[i] = "EMPTYPAGE";
+                // }
+
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
                         finalText_array[index] = result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
-                            if (finalText_array.every(element => element === "EMPTYPAGE")) {
-                                alert("Couldn't detect any text in that file.");
+                            var actuallyFull=true;
+                            for(var j=pageStart;j<finalText_array.length;j++){
+                                if(finalText_array[j]==null){
+                                    actuallyFull=false;
+                                    break;
+                                }
                             }
-                            var foundSplitters = {};
-                            foundSplitters=arrangeDetectedSplitters(foundSplitters);
-                            foundSplitters=getBestSplitters(foundSplitters,8);
-                            suggestedSplitters=[];
-                            displayBestSplitters(foundSplitters,4,true,'#suggestedSplitter');
-                            $('#loadingBanner').hide(250);
+                            if(actuallyFull){
+                                if (finalText_array.every(element => element === "EMPTYPAGE")) {
+                                    alert("Couldn't detect any text in that file.");
+                                }
+                                if(DEBUG)console.log(detectedHeaders);
+                                var foundSplitters = {};
+                                foundSplitters=arrangeDetectedSplitters(foundSplitters);
+                                foundSplitters=getBestSplitters(foundSplitters,8);
+                                suggestedSplitters=[];
+                                displayBestSplitters(foundSplitters,4,true,'#suggestedSplitter');
+                                $('#loadingBanner').hide(250);
+                                detectBadWords({"pageCount":pageEnd-pageStart+1});
+                            }
+                            
+                            
                         }
                     });
                 }
             });
         };
         fileReader.readAsArrayBuffer(userPDF);
+    }
+    function detectBadWords(params){
+        var pageCount=params['pageCount']||0;
+        var highestVal;
+        var highestVal_value=1;
+        $.each(detectedHeaders,function(key,value){
+            if(value>highestVal_value){
+                highestVal=key;
+                highestVal_value=value;
+            }
+        });
+        if(highestVal_value>pageCount/8&&highestVal_value>2&&highestVal.length>2){
+            if($('#badWords').val()==""){
+                $('#badWords').val(highestVal);
+            }else{
+                $('#badWords').val($('#badWords').val()+','+highestVal);
+            }
+            
+            $('#detectedBadWord').text(highestVal);
+            $('#badWordBanner').show(250);
+            setTimeout(function(){
+                $('#badWordBanner').hide(250);
+            },4000);
+        }
     }
     function splitter_detectNumbers(splitters){
         for (x in splitters) {
@@ -478,6 +529,30 @@ $(function () {
                     ignored = true;
                 }
                 if (!$('#addNewLine').is(':checked')) finalText += '\n';
+                if(textContent.items[0]){
+                    if(detectedHeaders[textContent.items[0].str]){
+                        detectedHeaders[textContent.items[0].str]++;
+                    }else{
+                        detectedHeaders[textContent.items[0].str]=1;
+                    }
+                }
+                if(textContent.items[textContent.items.length-1]){
+                    if(detectedHeaders[textContent.items[textContent.items.length-1].str]){
+                        detectedHeaders[textContent.items[textContent.items.length-1].str]++;
+                    }else{
+                        detectedHeaders[textContent.items[textContent.items.length-1].str]=1;
+                    }
+                }
+                // var replaceNewLines=false;
+                // if(textContent.items.every(function(value){
+                //     try{
+                //         return value.str.indexOf('\n')!=-1;
+                //     }catch{
+                //         return false;
+                //     }
+                // })){
+                //     replaceNewLines=true;
+                // }
                 for (var j = excludeStart; j < textContent.items.length - excludeEnd; j++) {
                     var detectNumber = textContent.items[j].str.replace(/ /g, "");
                     var parsedInt = parseInt(detectNumber);
@@ -490,6 +565,7 @@ $(function () {
                         if (remove) {
                             if(j==headerSemi)headerSemi++;
                         }else {
+                            
                             if (textItem == ' ') {
                                 addTab = false;
                             }
@@ -531,7 +607,18 @@ $(function () {
                         finalText+=quizletHeader;
                     }
                 }
+                // finalText=finalText.replace(/\n/g,"");
                 finalText = finalText.replace(/ACTUAL;;NUM/g, '');
+                // console.log(finalText.indexOf('\n'));
+                // if(finalText.indexOf('\n')==-1){
+                //     finalText+='\n';
+                // }
+                // if(replaceNewLines){
+                //     console.log(finalText);
+                //     finalText=finalText.replace(/\n/g,"");
+                //     finalText+='\n';
+                //     console.log(finalText);
+                // }
                 (ignored) ? callback('EMPTYPAGE', pageNumber) : callback(finalText, pageNumber);
             })
         });
@@ -663,7 +750,10 @@ $(function () {
         }
         return userText;
     }
-    
+    function clearElements(){
+        firstChars=[];
+        detectedHeaders={};
+    }
     //drag and drop
     var lastTarget = null;
 
@@ -716,7 +806,7 @@ $(function () {
             if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
             $('#loadingData').text('Splitters');
             $('#loadingBanner').show(100);
-            firstChars = [];
+            clearElements();
             detectSplitters();
         }
     });
