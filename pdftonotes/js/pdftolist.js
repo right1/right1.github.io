@@ -1,6 +1,6 @@
 //Elements to exclude from splitter detection
 const BLACKLIST=['/','\u200b','\t','\n',',' ,"'" ,"-" ,String.fromCharCode(160) ,String.fromCharCode(8239),
-':','≠','"','(',')','”',';','.',';','=','Δ','ε','δ','α','x','β','π','ρ','φ',' ','μ'];
+':','≠','"','(',')','”',';','.',';','=','Δ','ε','δ','α','x','β','π','ρ','φ',' ','μ','×'];
 //Extra words to trim
 const EXTRAWORDS={
     'This is the ': '',
@@ -376,12 +376,12 @@ $(function () {
         var highestVal;
         var highestVal_value=1;
         $.each(detectedHeaders,function(key,value){
-            if(value>highestVal_value){
+            if(value>highestVal_value&&key.length>2){
                 highestVal=key;
                 highestVal_value=value;
             }
         });
-        if(highestVal_value>pageCount/8&&highestVal_value>2&&highestVal.length>2){
+        if(highestVal_value>pageCount/12&&highestVal_value>2&&highestVal.length>2){
             if($('#badWords').val()==""){
                 $('#badWords').val(highestVal);
             }else{
