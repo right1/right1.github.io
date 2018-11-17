@@ -21,14 +21,7 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $("[name='bsswitch']").bootstrapSwitch();
     $('.options').hide();
-    setTimeout(function(){
-        showBanner({
-            'color':'blue',
-            'time_show': 500,
-            'time_hide': 500,
-            'time_duration': 5000
-        });
-    },2000);
+    
 
     var badWords = [];
     var nastyWords = [];
@@ -42,6 +35,14 @@ $(function () {
     var quizletHeader='^^^';
     var quizletEndPage=';;;';
     var detectedHeaders={};
+    setTimeout(function(){
+        showBanner({
+            'color':'blue',
+            'time_show': 500,
+            'time_hide': 500,
+            'time_duration': 5000
+        });
+    },2000); 
     //HTML ONCHANGE EVENTS
     $('#quizletFormat').on('switchChange.bootstrapSwitch', function (event, state) {
         quizletFormat=state;
@@ -70,7 +71,7 @@ $(function () {
         if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
         showBanner({
             'color': 'yellow',
-            'text': 'Detecting Splitters...',
+            'text': 'Detecting Bullet Points...',
             'time_show': 250
         })
         
@@ -663,7 +664,7 @@ $(function () {
             useSuggestedSplitters = true;
             showBanner({
                 'color': 'yellow',
-                'text': 'No splitters set. Used suggested splitters.',
+                'text': 'No bullet points set. Used suggested bullet points.',
                 'time_show': 250,
                 'time_hide': 250,
                 'time_duration': 3000
