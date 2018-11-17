@@ -28,7 +28,7 @@ $(function () {
             'time_hide': 500,
             'time_duration': 5000
         });
-    });
+    },2000);
 
     var badWords = [];
     var nastyWords = [];
@@ -184,14 +184,6 @@ $(function () {
             });
         };
         fileReader.readAsArrayBuffer(userPDF);
-    }
-    function showInfoBanner() {
-        setTimeout(function () {
-            $('#blueBanner').show(500);
-        }, 2000);
-        setTimeout(function () {
-            $('#blueBanner').hide(500);
-        }, 7000);
     }
     //showBanner: shows banner alert
     //PARAMETERS
@@ -574,16 +566,6 @@ $(function () {
                         detectedHeaders[textContent.items[textContent.items.length-1].str]=1;
                     }
                 }
-                // var replaceNewLines=false;
-                // if(textContent.items.every(function(value){
-                //     try{
-                //         return value.str.indexOf('\n')!=-1;
-                //     }catch{
-                //         return false;
-                //     }
-                // })){
-                //     replaceNewLines=true;
-                // }
                 for (var j = excludeStart; j < textContent.items.length - excludeEnd; j++) {
                     var detectNumber = textContent.items[j].str.replace(/ /g, "");
                     var parsedInt = parseInt(detectNumber);
