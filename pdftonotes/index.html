@@ -55,17 +55,14 @@
   <div class="container">
     <div style="visibility:hidden; opacity:0" id="dropzone" class="dropzone"></div>
     <div>
-      <div id="infoBanner" style="display:none" class="alert alert-primary" role="alert">
-        Open the Options Menu for better results. Now added quizlet support.
+      <div id="blueBanner" style="display:none" class="alert alert-primary" role="alert">
+        <span id="bannerText_blue">Open the Options Menu for better results. Now added quizlet support.</span>
       </div>
-      <div id="suggestedBanner" style="display:none" class="alert alert-warning" role="alert">
-        No splitters set. Used suggested splitters.
+      <div id="yellowBanner" style="display:none" class="alert alert-warning" role="alert">
+        <span id="bannerText_yellow">No splitters set. Used suggested splitters.</span>
       </div>
-      <div id="loadingBanner" style="display:none" class="alert alert-secondary" role="alert">
-        Loading <span id="loadingData"></span>...
-      </div>
-      <div id="badWordBanner" style="display:none" class="alert alert-danger" role="alert">
-        Added '<span id="detectedBadWord"></span>' to exclusion list
+      <div id="redBanner" style="display:none" class="alert alert-danger" role="alert">
+        <span id="bannerText_red"></span>
       </div>
       <h1>PDF to notes </h1>
       <label class="btn btn-danger btn-file" style="display:inline-block">
@@ -86,7 +83,7 @@
 
       </div>
       <br>
-      <button type="button" id="suggestedSplitterBtn" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="leave empty to use these, click on splitter to remove, click this button to copy all suggested splitters">
+      <button type="button" id="suggestedSplitterBtn" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="leave empty to use these, click on one to remove, click this button to copy all bullet points">
         <span id="suggestedSplitterBtn_text">Suggested Bullet Points </span><span class="badge bg-dark" style="font-size:1em">&#9432;</span>
       </button>
       <!--
@@ -115,7 +112,7 @@
 
 
       <div style="display:inline-block;height:5vh"></div>
-
+      <!-- HOWTO BUTTONS -->
       <label class="btn btn-info" style="display:none" id="quizletInfoBtn" data-toggle="modal" data-target="#quizletInfo">
         How to use?
       </label>
@@ -130,6 +127,7 @@
       <pre id="result">Result will go here</pre>
 
       <!--MODALS -->
+      <!-- HOWTO FOR QUIZLET -->
       <div class="modal" id="quizletInfo" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -154,6 +152,7 @@
         </div>
 
       </div>
+      <!-- HOWTO FOR DOCS/WORD -->
       <div class="modal" id="help" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -177,6 +176,7 @@
         </div>
 
       </div>
+      <!-- MAIN INFO MENU -->
       <div class="modal" id="info" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -213,6 +213,7 @@
         </div>
 
       </div>
+      <!--OPTIONS MENU-->
       <div class="modal" id="options" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">

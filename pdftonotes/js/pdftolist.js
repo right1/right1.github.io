@@ -15,20 +15,25 @@ const EXTRAWORDS={
     'The ': '',
 
 }
-var DEBUG=true;
+var DEBUG=false ;
 $(function () {
     //HTML INITIAL SETUP
     $('[data-toggle="tooltip"]').tooltip();
     $("[name='bsswitch']").bootstrapSwitch();
     $('.options').hide();
-    showInfoBanner();
+    setTimeout(function(){
+        showBanner({
+            'color':'blue',
+            'time_show': 500,
+            'time_hide': 500,
+            'time_duration': 5000
+        });
+    });
 
     var badWords = [];
     var nastyWords = [];
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
-    var result_PDF;
     var suggestedSplitters=[];
-    var firstChars = [];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
     var quizletFormat=false;
     var bullet='\t';
@@ -63,8 +68,12 @@ $(function () {
 
 
         if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
-        $('#loadingData').text('Splitters');
-        $('#loadingBanner').show(100);
+        showBanner({
+            'color': 'yellow',
+            'text': 'Detecting Splitters...',
+            'time_show': 250
+        })
+        
         clearElements();
         detectSplitters();
     });
@@ -126,8 +135,7 @@ $(function () {
         }
         hideQuizletBtn();
         hideHelpBtn();
-        $('#loadingData').text('Result');
-        $('#loadingBanner').show(100);
+        $('#result').text('Result is being loaded...');
         clearElements();
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
@@ -150,22 +158,21 @@ $(function () {
                 if (isNaN(excludeEnd)) excludeEnd = 0;
                 if (isNaN(excludeStart)) excludeStart = 0;
                 var count = pageStart;
-                for (var i = 0; i < pageStart; i++) {
-                    finalText_array[i] = "EMPTYPAGE";
-                }
                 for (var i = pageStart; i <= pageEnd; i++) {
                     getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
                         result=(trimExtra)?trimExtraWords(result):result;
                         finalText_array[index] = (quizletFormat)?result+quizletEndPage:result;
                         var actuallyFull=true;
                         
-                        if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
+                        if (finalText_array.length - 1 === pageEnd) {
                             for(var j=pageStart;j<finalText_array.length;j++){
                                 if(finalText_array[j]==null){
                                     actuallyFull=false;
                                     break;
                                 }
                             }
+                        }else{
+                            actuallyFull=false;
                         }
                         if(actuallyFull){
                             convertFromPDF(finalText_array.join('').replace(/EMPTYPAGE/g, ''));
@@ -180,30 +187,62 @@ $(function () {
     }
     function showInfoBanner() {
         setTimeout(function () {
-            $('#infoBanner').show(500);
+            $('#blueBanner').show(500);
         }, 2000);
         setTimeout(function () {
-            $('#infoBanner').hide(500);
+            $('#blueBanner').hide(500);
         }, 7000);
+    }
+    //showBanner: shows banner alert
+    //PARAMETERS
+    //color: red, blue, yellow (default: blue)
+    //text: text in banner (don't pass in to not update text)
+    //time_show: show animation duration (default: 0)
+    //time_hide: hide animation duration (default: 0)
+    //time_duration: time to show banner (ms) (default: don't hide)
+    function showBanner(params){
+        var bannerColor=params['color']||'blue';
+        var text=params['text']||false;
+        var t_show=params['time_show']||0;
+        var t_hide=params['time_hide']||0;
+        var duration=params['time_duration']||false;
+        if(text){
+            $('#bannerText_'+bannerColor).text(text);
+        }
+        $('#'+bannerColor+'Banner').show(t_show);
+        if(duration){
+            setTimeout(function(){
+                $('#'+bannerColor+'Banner').hide(t_hide);
+            },duration)
+        }
+    }
+    //hideBanner: hides banner alert
+    //PARAMETERS
+    //color: red, blue, yellow (default: blue)
+    //time_hide: hide animation duration (default: 0)
+    function hideBanner(params){
+        var bannerColor=params['color']||'blue';
+        var t_hide=params['time_hide']||0;
+        $('#'+bannerColor+'Banner').hide(t_hide);
     }
     function showQuizletBtn(){
         setTimeout(function () {
-            $('#quizletInfoBtn').show(500);
+            $('#quizletInfoBtn').show(100);
         }, 100);
     }
     function showHelpBtn(){
         setTimeout(function () {
-            $('.help').show(500);
+            $('.help').show(100);
         }, 100);
     }
     function hideQuizletBtn(){
         setTimeout(function () {
-            $('#quizletInfoBtn').hide(500);
+            $('#quizletInfoBtn').hide(100);
         }, 100);
     }
     function hideHelpBtn(){
         setTimeout(function () {
-            $('.help').hide(500);
+            $('.help').hide(100);
         }, 100);
     }
     function trimExtraWords(text){
@@ -232,7 +271,7 @@ $(function () {
         }
         return textArray;
     }
-    function arrangeDetectedSplitters(foundSplitters){
+    function arrangeDetectedSplitters(foundSplitters,firstChars){
         for (x in firstChars) {
             if (firstChars[x].substring(0, 1) == ' ') {
                 firstChars[x] = firstChars[x].substring(1, firstChars[x].length);
@@ -334,12 +373,8 @@ $(function () {
                 if (isNaN(excludeEnd)) excludeEnd = 0;
                 if (isNaN(excludeStart)) excludeStart = 0;
                 var count = pageStart;
-                // for (var i = 0; i < pageStart; i++) {
-                //     finalText_array[i] = "EMPTYPAGE";
-                // }
-
                 for (var i = pageStart; i <= pageEnd; i++) {
-                    getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index) {
+                    getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index,firstChars) {
                         finalText_array[index] = result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             var actuallyFull=true;
@@ -355,11 +390,14 @@ $(function () {
                                 }
                                 if(DEBUG)console.log(detectedHeaders);
                                 var foundSplitters = {};
-                                foundSplitters=arrangeDetectedSplitters(foundSplitters);
+                                foundSplitters=arrangeDetectedSplitters(foundSplitters,firstChars);
                                 foundSplitters=getBestSplitters(foundSplitters,8);
                                 suggestedSplitters=[];
                                 displayBestSplitters(foundSplitters,4,true,'#suggestedSplitter');
-                                $('#loadingBanner').hide(250);
+                                hideBanner({//hiding detecting splitters banner
+                                    'color': 'yellow',
+                                    'time_hide': 250
+                                })
                                 detectBadWords({"pageCount":pageEnd-pageStart+1});
                             }
                             
@@ -387,12 +425,13 @@ $(function () {
             }else{
                 $('#badWords').val($('#badWords').val()+','+highestVal);
             }
-            
-            $('#detectedBadWord').text(highestVal);
-            $('#badWordBanner').show(250);
-            setTimeout(function(){
-                $('#badWordBanner').hide(250);
-            },4000);
+            showBanner({
+                'color': 'red',
+                'text': 'Added "'+highestVal+'" to exclusion list.',
+                'time_show': 250,
+                'time_hide': 250,
+                'time_duration': 4000
+            })
         }
     }
     function splitter_detectNumbers(splitters){
@@ -428,10 +467,6 @@ $(function () {
                 var lastElement=textContent.items.pop();
                 textContent.items.unshift(lastElement);
                 if(DEBUG)console.log("shifted "+i);
-            }else{
-                //hope for the best
-                //(will go after first element)
-                // headerSemi=0;
             }
             //If its bad word
             var skipOver=findBadWords(textContent.items[headerSemi].str,false);
@@ -458,12 +493,6 @@ $(function () {
                 "error": e
             }
         }
-        // if(DEBUG)console.log({
-        //     "headerSemi":headerSemi,
-        //     "textContent":textContent,
-        //     "error": false
-        // });
-        
         return{
             "headerSemi":headerSemi,
             "textContent":textContent,
@@ -473,6 +502,7 @@ $(function () {
     function ignoreLoop(textContent){
         var nastyWord=false;
         var charCount=0;
+        var firstChars=[];
         for (var j = 0; j < textContent.items.length; j++) {
             if (textContent.items[j].str.substring(0, 1).match(/[a-z]/i) || textContent.items[j].str.substring(1, 2).match(/[a-z]/i)) {
             } else {
@@ -489,7 +519,8 @@ $(function () {
         }
         return {
             "charCount" : charCount,
-            "nastyWord": nastyWord
+            "nastyWord": nastyWord,
+            "firstChars": firstChars
         }
     }
     function findBadWords(textItem,checkLength){
@@ -524,7 +555,7 @@ $(function () {
                 var ignoreLoop_result=ignoreLoop(textContent);
                 nastyWord=ignoreLoop_result['nastyWord'];
                 charCount=ignoreLoop_result['charCount'];
-                
+                var firstChars=ignoreLoop_result['firstChars'];
                 if (charCount < ignore || nastyWord) {
                     ignored = true;
                 }
@@ -607,19 +638,8 @@ $(function () {
                         finalText+=quizletHeader;
                     }
                 }
-                // finalText=finalText.replace(/\n/g,"");
                 finalText = finalText.replace(/ACTUAL;;NUM/g, '');
-                // console.log(finalText.indexOf('\n'));
-                // if(finalText.indexOf('\n')==-1){
-                //     finalText+='\n';
-                // }
-                // if(replaceNewLines){
-                //     console.log(finalText);
-                //     finalText=finalText.replace(/\n/g,"");
-                //     finalText+='\n';
-                //     console.log(finalText);
-                // }
-                (ignored) ? callback('EMPTYPAGE', pageNumber) : callback(finalText, pageNumber);
+                (ignored) ? callback('EMPTYPAGE', pageNumber,firstChars) : callback(finalText, pageNumber,firstChars);
             })
         });
     }
@@ -648,9 +668,8 @@ $(function () {
         }
     }
     function convertFromPDF(text) {
-        result_PDF = convertText(text);
-        $('#loadingBanner').hide(250);
-        $('#result').text(result_PDF);
+        var convertedText = convertText(text);
+        $('#result').text(convertedText);
         (quizletFormat)?showQuizletBtn():showHelpBtn();
     }
     function convertText(userText) {
@@ -660,12 +679,13 @@ $(function () {
         var split3 = trimWhitespace($('#splitter3').val().split(','));
         if ((split1.length == 0 || (split1.length == 1 && split1[0] == '')) && (split2.length == 0 || (split2.length == 1 && split2[0] == '')) && (split3.length == 0 || (split3.length == 1 && split3[0] == ''))) {
             useSuggestedSplitters = true;
-            setTimeout(function () {
-                $('#suggestedBanner').show(250);
-            }, 1);
-            setTimeout(function () {
-                $('#suggestedBanner').hide(250);
-            }, 3000);
+            showBanner({
+                'color': 'yellow',
+                'text': 'No splitters set. Used suggested splitters.',
+                'time_show': 250,
+                'time_hide': 250,
+                'time_duration': 3000
+            })
             split1 = [];
             split2 = [];
             split3 = [];
@@ -751,7 +771,6 @@ $(function () {
         return userText;
     }
     function clearElements(){
-        firstChars=[];
         detectedHeaders={};
     }
     //drag and drop
@@ -804,8 +823,11 @@ $(function () {
             $('#filename').text(fileName);
 
             if(DEBUG)console.log('The file "' + fileName + '" has been selected.');
-            $('#loadingData').text('Splitters');
-            $('#loadingBanner').show(100);
+            showBanner({
+                'color': 'yellow',
+                'text': 'Detecting Splitters...',
+                'time_show': 250
+            })
             clearElements();
             detectSplitters();
         }
