@@ -119,9 +119,6 @@ $(function () {
     $('#btnConvert').click(function () {
         startConversion();
     });
-    $('#btnSplitters').click(function () {
-        detectSplitters();
-    });
     $('#convertQuizlet').click(function(){
         $('#trimExtra').bootstrapSwitch('state',true);
         $('#quizletFormat').bootstrapSwitch('state',true);
@@ -138,9 +135,9 @@ $(function () {
         hideHelpBtn();
         $('#result').text('Result is being loaded...');
         clearElements();
-        var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
+        // var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
-        var finalText = "";
+        // var finalText = "";
         var fileReader = new FileReader();
         var pageStart = parseInt($('#pageStart').val());
         var pageEnd = parseInt($('#pageEnd').val());
@@ -153,7 +150,6 @@ $(function () {
         fileReader.onload = function () {
             var typedarray = new Uint8Array(this.result);
             pdfjsLib.getDocument(typedarray).then(function (pdf) {
-                // you can now use *pdf* here
                 if (isNaN(pageEnd) || pageEnd == 0) pageEnd = pdf.numPages;
                 if (isNaN(pageStart) || pageStart == 0) pageStart = 1;
                 if (isNaN(excludeEnd)) excludeEnd = 0;
@@ -345,9 +341,9 @@ $(function () {
         }
     }
     function detectSplitters() {
-        var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
+        // var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
         var finalText_array = [];
-        var finalText = "";
+        // var finalText = "";
         var fileReader = new FileReader();
         var pageStart = parseInt($('#pageStart').val());
         var pageEnd = parseInt($('#pageEnd').val());
@@ -412,7 +408,7 @@ $(function () {
                 highestVal_value=value;
             }
         });
-        if(highestVal_value>pageCount/12&&highestVal_value>2&&highestVal.length>2){
+        if(highestVal_value>pageCount/12&&highestVal_value>2&&highestVal.length>2&&trimWhitespace($('#badWords').val().split(',')).indexOf(highestVal)==-1){
             if($('#badWords').val()==""){
                 $('#badWords').val(highestVal);
             }else{
