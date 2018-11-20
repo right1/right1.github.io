@@ -34,7 +34,6 @@ $(function () {
     var trimExtra=true;
     var quizletHeader='^^^';
     var quizletEndPage=';;;';
-    var detectedHeaders={};
     setTimeout(function(){
         showBanner({
             'color':'blue',
@@ -74,8 +73,6 @@ $(function () {
             'text': 'Detecting Bullet Points...',
             'time_show': 250
         })
-        
-        clearElements();
         detectSplitters();
     });
     $('#btnOptions').click(function () {
@@ -356,14 +353,13 @@ $(function () {
         fileReader.onload = function () {
             var typedarray = new Uint8Array(this.result);
             pdfjsLib.getDocument(typedarray).then(function (pdf) {
-                // you can now use *pdf* here
+                var detectedHeaders={};
                 if (isNaN(pageEnd) || pageEnd == 0) pageEnd = pdf.numPages;
                 if (isNaN(pageStart) || pageStart == 0) pageStart = 1;
                 if (isNaN(excludeEnd)) excludeEnd = 0;
                 if (isNaN(excludeStart)) excludeStart = 0;
-                var count = pageStart;
                 for (var i = pageStart; i <= pageEnd; i++) {
-                    getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index,firstChars) {
+                    getPageText(pdf, i, excludeStart, excludeEnd, ignoreThreshold, function (result, index,firstChars,detectedHeaders) {
                         finalText_array[index] = result;
                         if (finalText_array.length - 1 === pageEnd && finalText_array.every(element => element !== null)) {
                             var actuallyFull=true;
@@ -387,12 +383,12 @@ $(function () {
                                     'color': 'yellow',
                                     'time_hide': 250
                                 })
-                                detectBadWords({"pageCount":pageEnd-pageStart+1});
+                                detectBadWords({"pageCount":pageEnd-pageStart+1,"detectedHeaders":detectedHeaders});
                             }
                             
                             
                         }
-                    });
+                    },detectedHeaders);
                 }
             });
         };
@@ -400,6 +396,8 @@ $(function () {
     }
     function detectBadWords(params){
         var pageCount=params['pageCount']||0;
+        var detectedHeaders=params['detectedHeaders'];
+        console.log(detectedHeaders);
         var highestVal;
         var highestVal_value=1;
         $.each(detectedHeaders,function(key,value){
@@ -503,7 +501,7 @@ $(function () {
                     break;
                 }
             }
-            charCount += textContent.items[j].str.indexOf(nastyWord) != -1;
+            // charCount += textContent.items[j].str.indexOf(nastyWord) != -1;
             charCount += textContent.items[j].str.length;
         }
         return {
@@ -521,7 +519,7 @@ $(function () {
         }
         return false;
     }
-    function getPageText(pdf, pageNumber, excludeStart, excludeEnd, ignore, callback) {
+    function getPageText(pdf, pageNumber, excludeStart, excludeEnd, ignore, callback,detectedHeaders) {
         var finalText = "";
         var addTab = false;
         var headerDelim = ($('#headerDelim').is(':checked')) ? true : false;
@@ -549,20 +547,10 @@ $(function () {
                     ignored = true;
                 }
                 if (!$('#addNewLine').is(':checked')) finalText += '\n';
-                if(textContent.items[0]){
-                    if(detectedHeaders[textContent.items[0].str]){
-                        detectedHeaders[textContent.items[0].str]++;
-                    }else{
-                        detectedHeaders[textContent.items[0].str]=1;
-                    }
+                if(detectedHeaders&&typeof detectedHeaders=="object"){
+                    detectedHeaders=updateDetectedHeaders(textContent.items,detectedHeaders);
                 }
-                if(textContent.items[textContent.items.length-1]){
-                    if(detectedHeaders[textContent.items[textContent.items.length-1].str]){
-                        detectedHeaders[textContent.items[textContent.items.length-1].str]++;
-                    }else{
-                        detectedHeaders[textContent.items[textContent.items.length-1].str]=1;
-                    }
-                }
+                
                 for (var j = excludeStart; j < textContent.items.length - excludeEnd; j++) {
                     var detectNumber = textContent.items[j].str.replace(/ /g, "");
                     var parsedInt = parseInt(detectNumber);
@@ -575,7 +563,6 @@ $(function () {
                         if (remove) {
                             if(j==headerSemi)headerSemi++;
                         }else {
-                            
                             if (textItem == ' ') {
                                 addTab = false;
                             }
@@ -586,7 +573,6 @@ $(function () {
                                 finalText += '\t'
                                 addTab = false;
                             }
-                            
                             if ((split3.indexOf('NUM') !=-1  || split2.indexOf('NUM') !=-1 || split1.indexOf('NUM') !=-1) && textItem.length > 3) {
                                 var findProtectNumbers_result=findProtectNumbers(textItem,numSearch);
                                 textItem=findProtectNumbers_result['text'];
@@ -618,9 +604,40 @@ $(function () {
                     }
                 }
                 finalText = finalText.replace(/ACTUAL;;NUM/g, '');
-                (ignored) ? callback('EMPTYPAGE', pageNumber,firstChars) : callback(finalText, pageNumber,firstChars);
+                (ignored) ? callback('EMPTYPAGE', pageNumber,firstChars,detectedHeaders) : callback(finalText, pageNumber,firstChars,detectedHeaders);
             })
         });
+    }
+    function updateDetectedHeaders(textItemArray,detectedHeaders){
+        if(textItemArray[0]){//First Element
+            if(detectedHeaders[textItemArray[0].str]){
+                detectedHeaders[textItemArray[0].str]++;
+            }else{
+                detectedHeaders[textItemArray[0].str]=1;
+            }
+        }
+        if(textItemArray[1]){//Second Element
+            if(detectedHeaders[textItemArray[1].str]){
+                detectedHeaders[textItemArray[1].str]++;
+            }else{
+                detectedHeaders[textItemArray[1].str]=1;
+            }
+        }
+        if(textItemArray[textItemArray.length-1]){//Last element
+            if(detectedHeaders[textItemArray[textItemArray.length-1].str]){
+                detectedHeaders[textItemArray[textItemArray.length-1].str]++;
+            }else{
+                detectedHeaders[textItemArray[textItemArray.length-1].str]=1;
+            }
+        }
+        if(textItemArray[textItemArray.length-2]){//Second to Last element
+            if(detectedHeaders[textItemArray[textItemArray.length-2].str]){
+                detectedHeaders[textItemArray[textItemArray.length-2].str]++;
+            }else{
+                detectedHeaders[textItemArray[textItemArray.length-2].str]=1;
+            }
+        }
+        return detectedHeaders;
     }
     function findProtectNumbers(textItem,numSearch){
         for (var index = 0; index <=numSearch.length; index++) {
@@ -651,6 +668,7 @@ $(function () {
         $('#result').text(convertedText);
         (quizletFormat)?showQuizletBtn():showHelpBtn();
     }
+    
     function convertText(userText) {
         var useSuggestedSplitters = false;
         var split1 = trimWhitespace($('#splitter1').val().split(','));
@@ -749,9 +767,7 @@ $(function () {
         }
         return userText;
     }
-    function clearElements(){
-        detectedHeaders={};
-    }
+    
     //drag and drop
     var lastTarget = null;
 
@@ -807,7 +823,6 @@ $(function () {
                 'text': 'Detecting Splitters...',
                 'time_show': 250
             })
-            clearElements();
             detectSplitters();
         }
     });
