@@ -12,7 +12,7 @@ const EXTRAWORDS={
     'decided to': '→',
     'Decided to': '→',
     ' the ': ' ',
-    'The ': '',
+    'The ': ''
 }
 const DEBUG=false;//print debug messages to console
 const quizletHeader='^^^';//Quizlet delimiter after header
