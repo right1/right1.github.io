@@ -17,6 +17,13 @@
     	
 	</style> -->
 	<style>
+		main{
+			color:white;
+		}
+		.hr-light{
+			height:10vh;
+			background-color:none;
+		}
 		@media screen and (max-width: 531px) {
 			.container {
 				display: flex;
@@ -29,6 +36,14 @@
 
 			.text_left {
 				order: 2;
+			}
+			.opaque_parallax{
+				opacity:1
+			}
+		}
+		@media screen and (min-width: 532px) {
+			.opaque_parallax{
+				opacity:0.7
 			}
 		}
 	</style>
@@ -43,94 +58,101 @@
 	<!-- Main layout -->
 
 	<main>
-		<div class="jumbotron jumbotron-fluid" style="background-color:lightslategray">
-			<div class="container">
-				<h1 class="display-4">Viknesh Alagappan</h1>
-				<p class="lead">Javascript Projects</p>
-				<div style="height:4rem;display:inline-block"><a href="https://github.com/right1"><img style="height:100%" src="https://image.flaticon.com/icons/svg/25/25231.svg"></a></div>
-			</div>
-
-		</div>
+		
 		<!-- Main Container -->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-7 text_left">
-					<h2>PDF to Notes<div style="display:inline-block;width:1vw"></div>
-						<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/pdftonotes"><img style="height:100%"
-								 src="https://image.flaticon.com/icons/svg/25/25231.svg"></a></div>
-					</h2>
-					<p class="lead">Converts a PDF of notes (works best with powerpoint slides)
-						into formatted notes or directly into flashcards for Quizlet.</p>
-					<a class="btn border border-success" href="pdftonotes/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
-						 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
+		<div class="parallax-window" data-parallax="scroll" data-image-src="assets/img/bg.jpg" data-android-fix="true" data-ios-fix="true" data-speed="0.5">
+			<div class="jumbotron jumbotron-fluid opaque_parallax" style="background-color:darkslategray">
+					<div class="container">
+						<h1 class="display-4">Viknesh Alagappan</h1>
+						<p class="lead">Javascript Projects</p>
+						<div style="height:4rem;display:inline-block"><a href="https://github.com/right1"><img style="height:100%" src="assets/img/github-logo.png"></a></div>
+					</div>
+		
 				</div>
-				<div class="col-sm-5 image_right" style="height:16rem">
-					<a href="pdftonotes/index.html"><img class="pull-right rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block" src="https://i.imgur.com/evcJ3dU.png"></a>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-7 text_left">
+						<h2>PDF to Notes<div style="display:inline-block;width:1vw"></div>
+							<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/pdftonotes"><img style="height:100%"
+									 src="assets/img/github-logo.png"></a></div>
+						</h2>
+						<p class="lead">Converts a PDF of notes (works best with powerpoint slides)
+							into formatted notes or directly into flashcards for Quizlet.</p>
+						<a class="btn border border-success" href="pdftonotes/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
+							 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
+					</div>
+					<div class="col-sm-5 image_right" style="height:16rem">
+						<a href="pdftonotes/index.html"><img class="pull-right rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block"
+							 src="https://i.imgur.com/evcJ3dU.png"></a>
+					</div>
 				</div>
-			</div>
-			<hr class="hr-light">
-			</hr>
-			<div class="row">
+				<hr class="hr-light">
+				</hr>
+				<div class="row">
 
-				<div class="col-sm-5" style="height:16rem">
-					<a href="gradedistribution/index.html"><img class="pull-left rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block" src="https://i.imgur.com/kFPIyTG.png"></a>
+					<div class="col-sm-5" style="height:16rem">
+						<a href="gradedistribution/index.html"><img class="pull-left rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block"
+							 src="https://i.imgur.com/kFPIyTG.png"></a>
+					</div>
+					<div class="col-sm-7">
+						<h2>Grade Distribution Calculator<div style="display:inline-block;width:1vw"></div>
+							<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/gradedistribution"><img style="height:100%"
+									 src="assets/img/github-logo.png"></a></div>
+						</h2>
+						<p class="lead">Tool to calculate overall grade distribution from normally distributed subsections</p>
+						<a class="btn border border-info" href="gradedistribution/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
+							 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
+					</div>
 				</div>
-				<div class="col-sm-7">
-					<h2>Grade Distribution Calculator<div style="display:inline-block;width:1vw"></div>
-						<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/gradedistribution"><img style="height:100%"
-								 src="https://image.flaticon.com/icons/svg/25/25231.svg"></a></div>
-					</h2>
-					<p class="lead">Tool to calculate overall grade distribution from normally distributed subsections</p>
-					<a class="btn border border-info" href="gradedistribution/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
-						 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
+				<hr class="hr-light">
+				</hr>
+				<div class="row">
+					<div class="col-sm-7 text_left">
+						<h2>Pokemon Search<div style="display:inline-block;width:1vw"></div>
+							<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/right1.github.io/tree/master/pokemon_search"><img
+									 style="height:100%" src="assets/img/github-logo.png"></a></div>
+						</h2>
+						<p class="lead">Tool to find pokemon stats and ingame animations.</p>
+						<a class="btn border border-danger" href="pokemon_search/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
+							 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
+					</div>
+					<div class="col-sm-5 image_right" style="height:16rem">
+						<a href="pokemon_search/index.html"><img class="pull-right rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block"
+							 src="http://pngimg.com/uploads/pokeball/pokeball_PNG12.png"></a>
+					</div>
 				</div>
-			</div>
-			<hr class="hr-light">
-			</hr>
-			<div class="row">
-				<div class="col-sm-7 text_left">
-					<h2>Pokemon Search<div style="display:inline-block;width:1vw"></div>
-						<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/right1.github.io/tree/master/pokemon_search"><img
-								 style="height:100%" src="https://image.flaticon.com/icons/svg/25/25231.svg"></a></div>
-					</h2>
-					<p class="lead">Tool to find pokemon stats and ingame animations.</p>
-					<a class="btn border border-danger" href="pokemon_search/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
-						 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
-				</div>
-				<div class="col-sm-5 image_right" style="height:16rem">
-					<a href="pokemon_search/index.html"><img class="pull-right rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block" src="http://pngimg.com/uploads/pokeball/pokeball_PNG12.png"></a>
-				</div>
-			</div>
-			<hr class="hr-light">
-			</hr>
-			<div class="row">
+				<hr class="hr-light">
+				</hr>
+				<div class="row">
 
-				<div class="col-sm-5" style="height:16rem">
-					<a href="listconverter/index.html"><img class="pull-left rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block" src="https://i.imgur.com/y43Z2ex.png"></a>
+					<div class="col-sm-5" style="height:16rem">
+						<a href="listconverter/index.html"><img class="pull-left rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block"
+							 src="https://i.imgur.com/y43Z2ex.png"></a>
+					</div>
+					<div class="col-sm-7">
+						<h2>List format Converter</span></h2>
+						<p class="lead">Tool to add list formatting to unformatted text.</p>
+						<a class="btn border border-warning" href="listconverter/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
+							 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
+					</div>
 				</div>
-				<div class="col-sm-7">
-					<h2>List format Converter</span></h2>
-					<p class="lead">Tool to add list formatting to unformatted text.</p>
-					<a class="btn border border-warning" href="listconverter/index.html" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
-						 class="font-weight-bold lead" style="color:white">Go &rArr;</span></a>
-				</div>
-			</div>
-			<hr class="hr-light">
-			</hr>
-			<div class="row">
-				<div class="col-sm-7 text_left">
-					<h2>Other projects</span></h2>
-					<p class="lead">Practicing Use of Various APIs</p>
-					<a href="misc/chart_currency.html" style="width:50%;margin-left:auto;margin-right:auto;display:block" class="btn btn-success">Live currency data</a>
-					<a href="misc/jokes.html" style="width:50%;margin-left:auto;margin-right:auto;display:block" class="btn btn-danger">Jokes</a>
-					<a href="misc/aids.html" style="width:50%;margin-left:auto;margin-right:auto;display:block" class="btn"></a>
-				</div>
-				<div class="col-sm-5 image_right" style="height:16rem">
-					<img class="pull-right rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block" src="https://media.giphy.com/media/yUlFNRDWVfxCM/giphy.gif">
+				<hr class="hr-light">
+				</hr>
+				<div class="row">
+					<div class="col-sm-7 text_left">
+						<h2>Other projects</span></h2>
+						<p class="lead">Practicing Use of Various APIs</p>
+						<a href="misc/chart_currency.html" style="width:50%;margin-left:auto;margin-right:auto;display:block" class="btn btn-success">Live
+							currency data</a>
+						<a href="misc/jokes.html" style="width:50%;margin-left:auto;margin-right:auto;display:block" class="btn btn-danger">Jokes</a>
+						<a href="misc/aids.html" style="width:50%;margin-left:auto;margin-right:auto;display:block" class="btn"></a>
+					</div>
+					<div class="col-sm-5 image_right" style="height:16rem">
+						<img class="pull-right rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block" src="https://media.giphy.com/media/yUlFNRDWVfxCM/giphy.gif">
+					</div>
 				</div>
 			</div>
 		</div>
-
 		<!-- Main Container -->
 
 	</main>
@@ -151,7 +173,11 @@
 	<!-- SCRIPTS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="assets/js/parallax.min.js"></script>
+	<script>
+		//parallax
+	</script>
 </body>
 
 </html>
