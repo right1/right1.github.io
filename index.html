@@ -17,17 +17,20 @@
     	
 	</style> -->
 	<style>
-		main{
-			color:white;
+		main {
+			color: white;
 		}
-		.hr-light{
-			height:10vh;
-			background-color:none;
-		}
-		.bg-black{
 
-			background-color:black;
+		.hr-light {
+			height: 10vh;
+			background-color: none;
 		}
+
+		.bg-black {
+
+			background-color: black;
+		}
+
 		@media screen and (max-width: 531px) {
 			.container {
 				display: flex;
@@ -41,13 +44,15 @@
 			.text_left {
 				order: 2;
 			}
-			.opaque_parallax{
-				opacity:1
+
+			.opaque_parallax {
+				opacity: 1
 			}
 		}
+
 		@media screen and (min-width: 532px) {
-			.opaque_parallax{
-				opacity:0.7
+			.opaque_parallax {
+				opacity: 0.7
 			}
 		}
 	</style>
@@ -62,18 +67,35 @@
 	<!-- Main layout -->
 
 	<main>
-		
+
 		<!-- Main Container -->
-		<div class="parallax-window" data-parallax="scroll" data-image-src="assets/img/bg.jpg" data-android-fix="true" data-ios-fix="true" data-speed="0.5">
+		<div class="parallax-window" data-parallax="scroll" data-image-src="assets/img/bg.jpg" data-android-fix="true"
+		 data-ios-fix="true" data-speed="0.5">
 			<div class="jumbotron jumbotron-fluid opaque_parallax" style="background-color:darkslategray">
-					<div class="container">
-						<h1 class="display-4">Viknesh Alagappan</h1>
-						<p class="lead">Web portfolio of Javascript projects made mainly to solve my first world problems</p>
-						<div style="height:4rem;display:inline-block"><a href="https://github.com/right1"><img style="height:100%" src="assets/img/github-logo.png"></a></div>
-					</div>
-		
+				<div class="container">
+					<h1 class="display-4">Viknesh Alagappan</h1>
+					<p class="lead">Web portfolio</p>
+					<div style="height:4rem;display:inline-block"><a href="https://github.com/right1"><img style="height:100%" src="assets/img/github-logo.png"></a></div>
 				</div>
+
+			</div>
 			<div class="container">
+				<div class="row">
+					<div class="col-sm-5" style="height:16rem">
+						<a href="https://github.com/right1/LiveSubs"><img class="pull-left rounded-circle" style="height:100%;margin-left:auto;margin-right:auto;display:block"
+							 src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/%C3%86toms_-_Translation.svg/2000px-%C3%86toms_-_Translation.svg.png"></a>
+					</div>
+					<div class="col-sm-7">
+						<h2>LiveSubs<div style="display:inline-block;width:1vw"></div>
+							<div style="height:2rem;display:inline-block"><a href="https://github.com/right1/LiveSubs"><img style="height:100%"
+									 src="assets/img/github-logo.png"></a></div>
+						</h2>
+						<p class="lead">Online VideoChat with live translated subtitles and transcribed chat messages.</p>
+						<a class="btn border border-info" style="width:50%;background-color:black;margin-left:auto;margin-right:auto;display:block"><span
+							 class="font-weight-bold lead" style="color:white">Coming soon..</span></a>
+					</div>
+				</div>
+				<hr class="hr-light">
 				<div class="row">
 					<div class="col-sm-7 text_left">
 						<h2>PDF to Notes<div style="display:inline-block;width:1vw"></div>
