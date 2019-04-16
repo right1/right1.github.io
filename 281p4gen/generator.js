@@ -2,9 +2,15 @@ function gen(num_zeros,min,max){
     min=parseInt(min);
     max=parseInt(max);
     var res=[];
+    var hasBorder=false;
     for(var i=0;i<num_zeros;i++){
         var seed=Math.random();
         var val=Math.floor(seed*(max-min))+min;
+        if(!hasBorder && max>0 && val<0){
+            hasBorder=true;
+            val=0-val;
+        }
+        if(val>=0)hasBorder=true;
         var el=[];
         if(seed>=.5){
             el=[val,0];
