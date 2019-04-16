@@ -90,6 +90,9 @@
       var max = $('#max').val();
       var amt=$('#amt').val();
       if(amt.length<=0)amt=10;
+      if(min.length==0)min=-10;
+      if(max.length==0)max=10;
+      if(numZeros.length==0)numZeros=1;
       var points = gen(numZeros,min, max,amt);
       var result = "";
       result+=amt;
