@@ -1,6 +1,8 @@
 function gen(num_zeros,min,max,amount){
+    num_zeros=parseInt(num_zeros);
     min=parseInt(min);
     max=parseInt(max);
+    amount=parseInt(amount);
     var res=[];
     var hasBorder=false;
     for(var i=0;i<num_zeros;i++){
