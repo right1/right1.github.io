@@ -91,7 +91,9 @@
       var amt=$('#amt').val();
       if(amt.length<=0)amt=10;
       var points = gen(numZeros,min, max,amt);
-      var result = "10\n";
+      var result = "";
+      result+=amt;
+      result+= "\n";
       for (var i = 0; i < points.length; i++) {
         result += points[i][0] + ' ' + points[i][1] + '\n';
       }
