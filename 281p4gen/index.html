@@ -37,20 +37,28 @@
   <div class="container">
 
     <div class="row">
-      <div class="col-3">
-        <input type="number" class="form-control" id="max" placeholder="Max value (absolute)" type="number">
+      <div class="col-2">
+        <input type="number" class="form-control" id="min" placeholder="Min value" type="number">
+      </div>
+      <div class="col-2">
+        <input type="number" class="form-control" id="max" placeholder="Max value" type="number">
       </div>
       <div class="col-3">
-        <input type="number" class="form-control" id="numZero" placeholder="Num zeros" type="number">
+        <input type="number" class="form-control" id="numZero" placeholder="Num border (min)" type="number">
       </div>
-      <div class="col-6">
+      <div class="col-5">
         <button id="btn" class="btn btn-primary">Generate</button>
         <button id="copy" class="btn btn-success">Copy to clipboard</button>
       </div>
     </div>
     <br>
     <br>
-    <pre id="result">Result will go here</pre>
+    <div>
+        <pre style="display:inline-block;vertical-align: top;" id="result">Result will go here</pre>
+        <div style="width:5vw;display:inline-block"></div>
+        <div style="display:inline-block" id="plot"></div>
+    </div>
+    
     <div id="copyArea"></div>
   </div>
   <!-- Bootstrap core JavaScript
@@ -65,16 +73,35 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
   <script src="generator.js"></script>
   <script>
     $('#btn').click(function () {
       var numZeros = $('#numZero').val();
+      var min=$('#min').val();
       var max = $('#max').val();
-      var points = gen(numZeros, max);
+      var points = gen(numZeros,min, max);
       var result = "10\n";
       for (var i = 0; i < points.length; i++) {
         result += points[i][0] + ' ' + points[i][1] + '\n';
       }
+      var xvals=[],yvals=[];
+      for(var i=0;i<points.length;i++){
+        xvals.push(points[i][0]);
+        yvals.push(points[i][1]);
+      }
+      var layout = {
+          hovermode:'closest'
+      }
+      var chart = {
+        x: xvals,
+        y: yvals,
+        mode: 'markers',
+        type: 'scatter',
+        
+      };
+      Plotly.newPlot('plot',[chart],layout);
       $('#result').text(result);
     })
     $('#copy').click(function () {

@@ -1,8 +1,10 @@
-function gen(num_zeros,max){
+function gen(num_zeros,min,max){
+    min=parseInt(min);
+    max=parseInt(max);
     var res=[];
     for(var i=0;i<num_zeros;i++){
         var seed=Math.random();
-        var val=Math.floor(seed*max*2)-max;
+        var val=Math.floor(seed*(max-min))+min;
         var el=[];
         if(seed>=.5){
             el=[val,0];
@@ -13,10 +15,10 @@ function gen(num_zeros,max){
     }
     for(var i=num_zeros;i<10;i++){
         var seed=Math.random();
-        var val=Math.floor(seed*max*2)-max;
+        var val=Math.floor(seed*(max-min))+min;
         var el=[val,0];
         seed=Math.random();
-        val=Math.floor(seed*max*2)-max;
+        val=Math.floor(seed*(max-min))+min;
         el[1]=val;
         res.push(el);
     }
