@@ -1,7 +1,7 @@
 function gen(num_zeros,min,max,amount){
     num_zeros=parseInt(num_zeros);
     min=parseInt(min);
-    max=parseInt(max);
+    max=parseInt(max)+1;
     amount=parseInt(amount);
     var res=[];
     var hasBorder=false;
@@ -14,6 +14,7 @@ function gen(num_zeros,min,max,amount){
         }
         if(val>=0)hasBorder=true;
         var el=[];
+        seed=Math.random();
         if(seed>=.5){
             el=[val,0];
         }else{
