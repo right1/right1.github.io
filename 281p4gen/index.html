@@ -37,19 +37,26 @@
   <div class="container">
 
     <div class="row">
-      <div class="col-2">
+      <div class="col-3">
         <input type="number" class="form-control" id="min" placeholder="Min value" type="number">
       </div>
-      <div class="col-2">
+      <div class="col-3">
         <input type="number" class="form-control" id="max" placeholder="Max value" type="number">
       </div>
       <div class="col-3">
-        <input type="number" class="form-control" id="numZero" placeholder="Num border (min)" type="number">
+        <input type="number" class="form-control" id="numZero" placeholder="Num border (includes fakes)" type="number">
       </div>
-      <div class="col-5">
-        <button id="btn" class="btn btn-primary">Generate</button>
-        <button id="copy" class="btn btn-success">Copy to clipboard</button>
-      </div>
+      <div class="col-3">
+          <input type="number" class="form-control" id="amt" placeholder="Amount (default 10)" type="number">
+        </div>
+      
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-4">
+          <button id="btn" class="btn btn-primary">Generate</button>
+          <button id="copy" class="btn btn-success">Copy to clipboard</button>
+        </div>
     </div>
     <br>
     <br>
@@ -81,7 +88,9 @@
       var numZeros = $('#numZero').val();
       var min=$('#min').val();
       var max = $('#max').val();
-      var points = gen(numZeros,min, max);
+      var amt=$('#amt').val();
+      if(amt.length<=0)amt=10;
+      var points = gen(numZeros,min, max,amt);
       var result = "10\n";
       for (var i = 0; i < points.length; i++) {
         result += points[i][0] + ' ' + points[i][1] + '\n';

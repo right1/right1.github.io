@@ -1,4 +1,4 @@
-function gen(num_zeros,min,max){
+function gen(num_zeros,min,max,amount){
     min=parseInt(min);
     max=parseInt(max);
     var res=[];
@@ -19,7 +19,7 @@ function gen(num_zeros,min,max){
         }
         res.push(el);
     }
-    for(var i=num_zeros;i<10;i++){
+    for(var i=num_zeros;i<amount;i++){
         var seed=Math.random();
         var val=Math.floor(seed*(max-min))+min;
         var el=[val,0];
